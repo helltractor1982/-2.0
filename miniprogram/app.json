@@ -1,0 +1,60 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/identify/identify",
+    "pages/wiki/wiki",
+    "pages/history/history",
+    "pages/stats/stats",
+    "pages/about/about",
+    "pages/detail/detail"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#4A90D9",
+    "navigationBarTitleText": "犬博士",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F7F8FA",
+    "backgroundTextStyle": "dark",
+    "enablePullDownRefresh": false
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#4A90D9",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "images/tab-home.png",
+        "selectedIconPath": "images/tab-home-active.png"
+      },
+      {
+        "pagePath": "pages/identify/identify",
+        "text": "识别",
+        "iconPath": "images/tab-identify.png",
+        "selectedIconPath": "images/tab-identify-active.png"
+      },
+      {
+        "pagePath": "pages/wiki/wiki",
+        "text": "百科",
+        "iconPath": "images/tab-wiki.png",
+        "selectedIconPath": "images/tab-wiki-active.png"
+      },
+      {
+        "pagePath": "pages/history/history",
+        "text": "记录",
+        "iconPath": "images/tab-history.png",
+        "selectedIconPath": "images/tab-history-active.png"
+      },
+      {
+        "pagePath": "pages/about/about",
+        "text": "关于",
+        "iconPath": "images/tab-about.png",
+        "selectedIconPath": "images/tab-about-active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}

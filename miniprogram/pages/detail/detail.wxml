@@ -1,0 +1,168 @@
+<!--pages/detail/detail.wxml - 品种详情页-->
+<view class="page-container" wx:if="{{breed}}">
+  <!-- 品种头部 -->
+  <view class="breed-hero">
+    <view class="breed-emoji-wrap">
+      <text class="breed-emoji">{{breed.emoji || '🐶'}}</text>
+    </view>
+    <view class="breed-hero-info">
+      <text class="breed-name">{{breed.name_zh}}</text>
+      <text class="breed-name-en">{{breed.name_en}}</text>
+      <view class="breed-basic-tags">
+        <text class="tag tag-accent">{{breed.size}}</text>
+        <text class="tag tag-primary">{{breed.group}}</text>
+        <text class="tag tag-warning">{{breed.origin}}</text>
+      </view>
+    </view>
+    <!-- 收藏按钮 -->
+    <view class="fav-btn {{isFav ? 'fav-active' : ''}}" bindtap="toggleFav">
+      <text>{{isFav ? '❤️' : '🤍'}}</text>
+    </view>
+  </view>
+
+  <!-- 基本信息卡片 -->
+  <view class="card">
+    <view class="card-title">📋 基本信息</view>
+    <view class="info-grid">
+      <view class="info-item">
+        <text class="info-label">体型</text>
+        <text class="info-value">{{breed.size}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">寿命</text>
+        <text class="info-value">{{breed.lifespan}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">体重</text>
+        <text class="info-value">{{breed.weight}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">身高</text>
+        <text class="info-value">{{breed.height}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">组别</text>
+        <text class="info-value">{{breed.group}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">原产地</text>
+        <text class="info-value">{{breed.origin}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 性格特征 -->
+  <view class="card">
+    <view class="card-title">🎯 性格特征</view>
+    <view class="temperament-list">
+      <view class="temperament-item" wx:for="{{breed.temperament}}" wx:key="*this">
+        <text class="temperament-name">{{item}}</text>
+        <view class="temperament-bar">
+          <view class="temperament-fill" style="width: {{80 + Math.random() * 20}}%"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 能力指标 -->
+  <view class="card">
+    <view class="card-title">⚡ 能力指标</view>
+    <view class="ability-list">
+      <view class="ability-item">
+        <view class="ability-header">
+          <text class="ability-name">运动需求</text>
+          <text class="ability-level {{breed.exercise === '极高' ? 'level-high' : breed.exercise === '高' ? 'level-mid-high' : 'level-mid'}}">{{breed.exercise}}</text>
+        </view>
+        <view class="ability-bar"><view class="ability-fill {{breed.exercise === '极高' ? 'fill-high' : breed.exercise === '高' ? 'fill-mid-high' : 'fill-mid'}}" style="width: {{breed.exercise === '极高' ? '95' : breed.exercise === '高' ? '75' : breed.exercise === '中高' ? '60' : '40'}}%"></view></view>
+      </view>
+      <view class="ability-item">
+        <view class="ability-header">
+          <text class="ability-name">可训练性</text>
+          <text class="ability-level {{breed.trainability === '极高' ? 'level-high' : breed.trainability === '高' ? 'level-mid-high' : 'level-mid'}}">{{breed.trainability}}</text>
+        </view>
+        <view class="ability-bar"><view class="ability-fill {{breed.trainability === '极高' ? 'fill-high' : breed.trainability === '高' ? 'fill-mid-high' : 'fill-mid'}}" style="width: {{breed.trainability === '极高' ? '95' : breed.trainability === '高' ? '75' : breed.trainability === '极低' ? '20' : '50'}}%"></view></view>
+      </view>
+      <view class="ability-item">
+        <view class="ability-header">
+          <text class="ability-name">护卫能力</text>
+          <text class="ability-level {{breed.guardAbility === '极高' ? 'level-high' : breed.guardAbility === '高' ? 'level-mid-high' : 'level-mid'}}">{{breed.guardAbility}}</text>
+        </view>
+        <view class="ability-bar"><view class="ability-fill {{breed.guardAbility === '极高' ? 'fill-high' : breed.guardAbility === '高' ? 'fill-mid-high' : 'fill-mid'}}" style="width: {{breed.guardAbility === '极高' ? '95' : breed.guardAbility === '高' ? '75' : breed.guardAbility === '中等' ? '50' : '25'}}%"></view></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 毛发信息 -->
+  <view class="card" wx:if="{{breed.coat}}">
+    <view class="card-title">✨ 毛发特征</view>
+    <view class="coat-grid">
+      <view class="coat-item">
+        <text class="coat-label">毛发类型</text>
+        <text class="coat-value">{{breed.coat}}</text>
+      </view>
+      <view class="coat-item">
+        <text class="coat-label">毛长</text>
+        <text class="coat-value">{{breed.coatLength}}</text>
+      </view>
+      <view class="coat-item full-width" wx:if="{{breed.colors}}">
+        <text class="coat-label">毛色</text>
+        <view class="color-tags">
+          <text class="tag tag-primary" wx:for="{{breed.colors}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 喂养建议 -->
+  <view class="card" wx:if="{{breed.feeding}}">
+    <view class="card-title">🍖 喂养建议</view>
+    <text class="content-text">{{breed.feeding}}</text>
+  </view>
+
+  <!-- 常见疾病 -->
+  <view class="card" wx:if="{{breed.commonDiseases && breed.commonDiseases.length > 0}}">
+    <view class="card-title">🏥 常见疾病</view>
+    <view class="disease-list">
+      <view class="disease-item" wx:for="{{breed.commonDiseases}}" wx:key="*this">
+        <text class="disease-dot">•</text>
+        <text class="disease-name">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 疫苗建议 -->
+  <view class="card" wx:if="{{breed.vaccineSchedule}}">
+    <view class="card-title">💉 疫苗建议</view>
+    <text class="content-text">{{breed.vaccineSchedule}}</text>
+  </view>
+
+  <!-- 美容需求 -->
+  <view class="card" wx:if="{{breed.grooming}}">
+    <view class="card-title">✂️ 美容护理</view>
+    <text class="content-text">{{breed.grooming}}</text>
+  </view>
+
+  <!-- 有趣的冷知识 -->
+  <view class="card fun-fact-card" wx:if="{{breed.funFact}}">
+    <view class="card-title">🎉 你知道吗？</view>
+    <view class="fun-fact-content">
+      <text class="fun-fact-icon">💡</text>
+      <text class="fun-fact-text">{{breed.funFact}}</text>
+    </view>
+  </view>
+
+  <!-- 底部间距 -->
+  <view style="height: 40rpx;"></view>
+</view>
+
+<!-- 加载中 -->
+<view class="empty-state" wx:if="{{!breed && !error}}">
+  <view class="loading-spinner"></view>
+  <text class="loading-text mt-20">加载中...</text>
+</view>
+
+<!-- 错误 -->
+<view class="empty-state" wx:if="{{error}}">
+  <text class="empty-icon">😥</text>
+  <text class="empty-text">{{error}}</text>
+</view>

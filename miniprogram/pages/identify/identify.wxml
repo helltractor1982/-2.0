@@ -1,0 +1,97 @@
+<!--pages/identify/identify.wxml - 识别页-->
+<view class="page-container">
+  <!-- 未选择图片时的上传区 -->
+  <view class="upload-area card" wx:if="{{!imagePath && !identifying}}">
+    <view class="upload-icon-wrap">
+      <text class="upload-icon">📸</text>
+    </view>
+    <text class="upload-title">拍一张狗狗的照片</text>
+    <text class="upload-desc">支持拍照、相册上传，AI 自动识别犬种</text>
+    <view class="upload-btns">
+      <button class="btn-primary upload-btn" bindtap="takePhoto">
+        <text>📷 拍照识别</text>
+      </button>
+      <button class="btn-outline upload-btn" bindtap="choosePhoto">
+        <text>🖼️ 相册选择</text>
+      </button>
+    </view>
+    <view class="upload-tips">
+      <text class="tip-icon">💡</text>
+      <text class="tip-text">提示：尽量拍摄狗狗正面或侧面清晰照片，识别更准确</text>
+    </view>
+  </view>
+
+  <!-- 已选择图片，等待确认识别 -->
+  <view class="preview-area" wx:if="{{imagePath && !identifying && !results}}">
+    <view class="preview-image-wrap">
+      <image class="preview-image" src="{{imagePath}}" mode="aspectFit"></image>
+    </view>
+    <view class="preview-actions">
+      <button class="btn-outline" bindtap="reChoose">重新选择</button>
+      <button class="btn-primary" bindtap="startIdentify">开始识别</button>
+    </view>
+  </view>
+
+  <!-- 识别中 -->
+  <view class="identifying-area card flex-center flex-column" wx:if="{{identifying}}">
+    <view class="identify-animation">
+      <view class="scan-line"></view>
+      <image class="identifying-image" src="{{imagePath}}" mode="aspectFit"></image>
+    </view>
+    <view class="loading-spinner mt-20"></view>
+    <text class="loading-text mt-20">{{identifyTip}}</text>
+  </view>
+
+  <!-- 识别结果 -->
+  <view class="result-area" wx:if="{{results && results.length > 0}}">
+    <!-- 顶部最佳匹配 -->
+    <view class="top-result card">
+      <view class="result-badge">
+        <text class="badge-text">最佳匹配</text>
+      </view>
+      <view class="top-result-content">
+        <view class="result-emoji">{{results[0].emoji || '🐶'}}</view>
+        <view class="result-info">
+          <text class="result-name">{{results[0].name_zh}}</text>
+          <text class="result-en">{{results[0].name_en}}</text>
+          <view class="result-confidence">
+            <view class="confidence-bar">
+              <view class="confidence-fill" style="width: {{(results[0].confidence * 100)}}%"></view>
+            </view>
+            <text class="confidence-text">置信度 {{(results[0].confidence * 100).toFixed(1)}}%</text>
+          </view>
+          <view class="result-tags">
+            <text class="tag tag-primary" wx:for="{{results[0].temperament}}" wx:key="*this" wx:for-item="tag">{{tag}}</text>
+          </view>
+        </view>
+      </view>
+      <button class="btn-primary btn-detail" bindtap="viewDetail" data-id="{{results[0].breed_id}}">查看详细资料</button>
+    </view>
+
+    <!-- 其他可能匹配 -->
+    <view class="other-results" wx:if="{{results.length > 1}}">
+      <view class="section-title">
+        <text>其他可能匹配</text>
+        <text class="match-count">共 {{results.length - 1}} 个</text>
+      </view>
+      <view class="other-result-item card" wx:for="{{results}}" wx:key="breed_id" wx:if="{{index > 0}}" bindtap="viewDetail" data-id="{{item.breed_id}}">
+        <view class="other-rank">NO.{{index + 1}}</view>
+        <view class="other-emoji">{{item.emoji || '🐶'}}</view>
+        <view class="other-info">
+          <text class="other-name">{{item.name_zh}}</text>
+          <text class="other-en">{{item.name_en}}</text>
+          <view class="other-confidence-bar">
+            <view class="confidence-fill-sm" style="width: {{(item.confidence * 100)}}%"></view>
+          </view>
+        </view>
+        <text class="other-percent">{{(item.confidence * 100).toFixed(1)}}%</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="result-actions">
+      <button class="btn-primary" bindtap="reChoose">重新识别</button>
+      <button class="btn-outline" bindtap="goHome">返回首页</button>
+    </view>
+  </view>
+</view>

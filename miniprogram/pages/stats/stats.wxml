@@ -1,0 +1,91 @@
+<!--pages/stats/stats.wxml - 数据统计页-->
+<view class="page-container">
+  <!-- 概览卡片 -->
+  <view class="stat-cards">
+    <view class="stat-card">
+      <text class="stat-num">{{overview.total || 0}}</text>
+      <text class="stat-desc">累计识别次数</text>
+    </view>
+    <view class="stat-card accent">
+      <text class="stat-num">{{overview.today || 0}}</text>
+      <text class="stat-desc">今日识别</text>
+    </view>
+    <view class="stat-card success">
+      <text class="stat-num">{{overview.breedsCount || 0}}</text>
+      <text class="stat-desc">识别犬种数</text>
+    </view>
+    <view class="stat-card warning">
+      <text class="stat-num">{{overview.favorites || 0}}</text>
+      <text class="stat-desc">收藏品种</text>
+    </view>
+  </view>
+
+  <!-- 品种识别分布 -->
+  <view class="card">
+    <view class="card-title">📊 品种识别分布（Top 10）</view>
+    <view class="chart-wrap">
+      <canvas
+        canvas-id="chartDistribution"
+        id="chartDistribution"
+        class="chart"
+        style="width: 100%; height: 500rpx;"
+      ></canvas>
+    </view>
+  </view>
+
+  <!-- 识别趋势 -->
+  <view class="card">
+    <view class="card-title">📈 识别趋势（近7天）</view>
+    <view class="chart-wrap">
+      <canvas
+        canvas-id="chartTrend"
+        id="chartTrend"
+        class="chart"
+        style="width: 100%; height: 400rpx;"
+      ></canvas>
+    </view>
+  </view>
+
+  <!-- 体型分布 -->
+  <view class="card">
+    <view class="card-title">📏 识别品种体型分布</view>
+    <view class="size-distribution">
+      <view class="size-bar-item">
+        <text class="size-bar-label">小型犬</text>
+        <view class="size-bar">
+          <view class="size-bar-fill small" style="width: {{sizeDistribution.small || 0}}%"></view>
+        </view>
+        <text class="size-bar-value">{{sizeDistribution.small || 0}}%</text>
+      </view>
+      <view class="size-bar-item">
+        <text class="size-bar-label">中型犬</text>
+        <view class="size-bar">
+          <view class="size-bar-fill medium" style="width: {{sizeDistribution.medium || 0}}%"></view>
+        </view>
+        <text class="size-bar-value">{{sizeDistribution.medium || 0}}%</text>
+      </view>
+      <view class="size-bar-item">
+        <text class="size-bar-label">大型犬</text>
+        <view class="size-bar">
+          <view class="size-bar-fill large" style="width: {{sizeDistribution.large || 0}}%"></view>
+        </view>
+        <text class="size-bar-value">{{sizeDistribution.large || 0}}%</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 近7天趋势列表 -->
+  <view class="card">
+    <view class="card-title">📅 每日识别详情</view>
+    <view class="daily-list" wx:if="{{dailyTrend.length > 0}}">
+      <view class="daily-item" wx:for="{{dailyTrend}}" wx:key="date">
+        <text class="daily-date">{{item.date}}</text>
+        <view class="daily-bar-wrap">
+          <view class="daily-bar" style="width: {{(item.count / maxDailyCount) * 100}}%"></view>
+        </view>
+        <text class="daily-count">{{item.count}}</text>
+      </view>
+    </view>
+    <text class="empty-inline" wx:else>暂无数据</text>
+  </view>
+</view>

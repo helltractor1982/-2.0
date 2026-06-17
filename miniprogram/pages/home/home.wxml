@@ -1,0 +1,97 @@
+<!--pages/home/home.wxml - 首页-->
+<view class="page-container">
+  <!-- 顶部标题栏 -->
+  <view class="hero-section">
+    <view class="hero-bg">
+      <view class="hero-icon">🐕</view>
+    </view>
+    <view class="hero-content">
+      <view class="hero-title">犬博士</view>
+      <view class="hero-subtitle">AI 宠物犬品种智能鉴别助手</view>
+      <view class="hero-desc">拍照识别 · 品种百科 · 专业知识</view>
+    </view>
+    <!-- 搜索入口 -->
+    <view class="search-entry" bindtap="goIdentify">
+      <image class="search-entry-icon" src="/images/icon-camera.png" mode="aspectFit"></image>
+      <text class="search-entry-text">点击拍照或上传图片识别犬种</text>
+    </view>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="feature-grid">
+    <view class="feature-item" bindtap="goIdentify">
+      <view class="feature-icon-wrap" style="background: linear-gradient(135deg, #E8F0FE, #D0E2FF);">
+        <text class="feature-icon">📷</text>
+      </view>
+      <text class="feature-label">拍照识别</text>
+      <text class="feature-desc">AI 智能鉴别</text>
+    </view>
+    <view class="feature-item" bindtap="goWiki">
+      <view class="feature-icon-wrap" style="background: linear-gradient(135deg, #FFF0E8, #FFE0D0);">
+        <text class="feature-icon">📚</text>
+      </view>
+      <text class="feature-label">品种百科</text>
+      <text class="feature-desc">60+ 犬种知识</text>
+    </view>
+    <view class="feature-item" bindtap="goHistory">
+      <view class="feature-icon-wrap" style="background: linear-gradient(135deg, #E8F8E8, #D0F0D0);">
+        <text class="feature-icon">📋</text>
+      </view>
+      <text class="feature-label">识别记录</text>
+      <text class="feature-desc">查看历史</text>
+    </view>
+    <view class="feature-item" bindtap="goStats">
+      <view class="feature-icon-wrap" style="background: linear-gradient(135deg, #EDE8FF, #D8D0FF);">
+        <text class="feature-icon">📊</text>
+      </view>
+      <text class="feature-label">数据统计</text>
+      <text class="feature-desc">使用报告</text>
+    </view>
+  </view>
+
+  <!-- 使用统计 -->
+  <view class="stats-bar card">
+    <view class="stats-item">
+      <text class="stats-value">{{stats.total || 0}}</text>
+      <text class="stats-label">累计识别</text>
+    </view>
+    <view class="stats-divider"></view>
+    <view class="stats-item">
+      <text class="stats-value">{{stats.today || 0}}</text>
+      <text class="stats-label">今日识别</text>
+    </view>
+    <view class="stats-divider"></view>
+    <view class="stats-item">
+      <text class="stats-value">{{favorites.length || 0}}</text>
+      <text class="stats-label">收藏品种</text>
+    </view>
+  </view>
+
+  <!-- 每日推荐 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">📌 每日推荐</text>
+      <text class="section-more" bindtap="goWiki">更多 ></text>
+    </view>
+    <scroll-view class="recommend-scroll" scroll-x="true" show-scrollbar="{{false}}">
+      <view class="recommend-card" wx:for="{{recommendBreeds}}" wx:key="breed_id" bindtap="viewDetail" data-id="{{item.breed_id}}">
+        <view class="recommend-emoji">{{item.emoji || '🐶'}}</view>
+        <view class="recommend-name">{{item.name_zh}}</view>
+        <view class="recommend-en">{{item.name_en}}</view>
+        <view class="recommend-size">{{item.size}}</view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 品种分类入口 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">🔍 按体型浏览</text>
+    </view>
+    <view class="size-tags">
+      <view class="size-tag" wx:for="{{['超小型犬','小型犬','中型犬','大型犬','超大型犬']}}" wx:key="*this" bindtap="goWikiBySize" data-size="{{item}}">
+        {{item}}
+      </view>
+    </view>
+  </view>
+</view>

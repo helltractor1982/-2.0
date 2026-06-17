@@ -1,0 +1,192 @@
+/* pages/about/about.wxss */
+
+/* 头部 Logo */
+.about-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 40rpx 40rpx;
+}
+
+.about-logo {
+  width: 160rpx;
+  height: 160rpx;
+  background: linear-gradient(135deg, #4A90D9, #6BA8E5);
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+  box-shadow: 0 12rpx 32rpx rgba(74, 144, 217, 0.3);
+}
+
+.logo-emoji {
+  font-size: 80rpx;
+}
+
+.about-app-name {
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #333333;
+  margin-bottom: 8rpx;
+}
+
+.about-version {
+  font-size: 24rpx;
+  color: #4A90D9;
+  background: #E8F0FE;
+  padding: 4rpx 24rpx;
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.about-slogan {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+/* 功能介绍 */
+.feature-list {
+  padding: 10rpx 0;
+}
+
+.feature-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 20rpx 0;
+}
+
+.feature-row:not(:last-child) {
+  border-bottom: 2rpx solid #F7F8FA;
+}
+
+.feature-row-icon {
+  font-size: 40rpx;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+  width: 60rpx;
+  text-align: center;
+}
+
+.feature-row-text {
+  flex: 1;
+}
+
+.feature-row-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 6rpx;
+}
+
+.feature-row-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #999999;
+  line-height: 1.5;
+}
+
+/* 技术信息 */
+.tech-list {
+  padding: 10rpx 0;
+}
+
+.tech-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 0;
+}
+
+.tech-item:not(:last-child) {
+  border-bottom: 2rpx solid #F7F8FA;
+}
+
+.tech-label {
+  font-size: 26rpx;
+  color: #666666;
+  width: 160rpx;
+  flex-shrink: 0;
+}
+
+.tech-value {
+  font-size: 26rpx;
+  color: #333333;
+  font-weight: 500;
+}
+
+/* 使用统计 */
+.usage-summary {
+  display: flex;
+  justify-content: space-around;
+  padding: 20rpx 0;
+}
+
+.usage-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.usage-num {
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #4A90D9;
+  margin-bottom: 8rpx;
+}
+
+.usage-label {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 链接 */
+.about-links {
+  margin: 0 30rpx;
+}
+
+.about-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FFFFFF;
+  padding: 30rpx;
+  border-radius: 20rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.link-text {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.link-arrow {
+  font-size: 28rpx;
+  color: #CCCCCC;
+}
+
+/* 底部 */
+.about-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 0 60rpx;
+}
+
+.copyright {
+  font-size: 24rpx;
+  color: #999999;
+  margin-bottom: 8rpx;
+}
+
+.powered {
+  font-size: 22rpx;
+  color: #CCCCCC;
+  margin-bottom: 8rpx;
+}
+
+.copyright-year {
+  font-size: 22rpx;
+  color: #CCCCCC;
+}

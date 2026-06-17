@@ -1,0 +1,112 @@
+<!--pages/about/about.wxml - 关于页-->
+<view class="page-container">
+  <!-- Logo区 -->
+  <view class="about-hero">
+    <view class="about-logo">
+      <text class="logo-emoji">🐕</text>
+    </view>
+    <text class="about-app-name">犬博士</text>
+    <text class="about-version">v1.0.0</text>
+    <text class="about-slogan">AI 宠物犬品种智能鉴别助手</text>
+  </view>
+
+  <!-- 功能介绍 -->
+  <view class="card">
+    <view class="card-title">💡 功能介绍</view>
+    <view class="feature-list">
+      <view class="feature-row">
+        <text class="feature-row-icon">📷</text>
+        <view class="feature-row-text">
+          <text class="feature-row-title">AI 智能识别</text>
+          <text class="feature-row-desc">拍照或上传图片，深度学习模型自动鉴别犬种</text>
+        </view>
+      </view>
+      <view class="feature-row">
+        <text class="feature-row-icon">📚</text>
+        <view class="feature-row-text">
+          <text class="feature-row-title">品种百科</text>
+          <text class="feature-row-desc">收录 60+ 犬种完整资料，包含性格、喂养、健康知识</text>
+        </view>
+      </view>
+      <view class="feature-row">
+        <text class="feature-row-icon">📊</text>
+        <view class="feature-row-text">
+          <text class="feature-row-title">数据统计</text>
+          <text class="feature-row-desc">记录使用数据，分析识别趋势与品种偏好</text>
+        </view>
+      </view>
+      <view class="feature-row">
+        <text class="feature-row-icon">🔄</text>
+        <view class="feature-row-text">
+          <text class="feature-row-title">品种对比</text>
+          <text class="feature-row-desc">多品种横向对比，帮助选择合适的伴侣犬</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 技术信息 -->
+  <view class="card">
+    <view class="card-title">🔧 技术架构</view>
+    <view class="tech-list">
+      <view class="tech-item">
+        <text class="tech-label">前端框架</text>
+        <text class="tech-value">微信小程序原生 + H5</text>
+      </view>
+      <view class="tech-item">
+        <text class="tech-label">后端框架</text>
+        <text class="tech-value">Python FastAPI</text>
+      </view>
+      <view class="tech-item">
+        <text class="tech-label">AI 模型</text>
+        <text class="tech-value">MobileNetV3-Large + 迁移学习</text>
+      </view>
+      <view class="tech-item">
+        <text class="tech-label">数据库</text>
+        <text class="tech-value">SQLite + 本地存储</text>
+      </view>
+      <view class="tech-item">
+        <text class="tech-label">数据可视化</text>
+        <text class="tech-value">Canvas 2D / ECharts</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 使用统计 -->
+  <view class="card">
+    <view class="card-title">📈 使用统计</view>
+    <view class="usage-summary">
+      <view class="usage-item">
+        <text class="usage-num">{{stats.total || 0}}</text>
+        <text class="usage-label">累计识别</text>
+      </view>
+      <view class="usage-item">
+        <text class="usage-num">{{stats.today || 0}}</text>
+        <text class="usage-label">今日识别</text>
+      </view>
+      <view class="usage-item">
+        <text class="usage-num">{{stats.collection || 0}}</text>
+        <text class="usage-label">收藏品种</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 链接 -->
+  <view class="about-links">
+    <view class="about-link" bindtap="openDocs">
+      <text class="link-text">📖 使用帮助</text>
+      <text class="link-arrow">></text>
+    </view>
+    <view class="about-link" bindtap="openFeedback">
+      <text class="link-text">💬 意见反馈</text>
+      <text class="link-arrow">></text>
+    </view>
+  </view>
+
+  <!-- 底部版权 -->
+  <view class="about-footer">
+    <text class="copyright">犬博士 v1.0.0</text>
+    <text class="powered">Powered by AI & WeChat Mini Program</text>
+    <text class="copyright-year">© 2026 犬博士团队</text>
+  </view>
+</view>

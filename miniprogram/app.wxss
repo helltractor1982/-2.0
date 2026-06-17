@@ -1,0 +1,306 @@
+/* app.wxss - 犬博士全局样式 */
+
+/* ====== CSS 变量（小程序不支持 :root，直接定义） ====== */
+page {
+  --primary: #4A90D9;
+  --primary-dark: #3A7BC8;
+  --accent: #FF7B54;
+  --accent-light: #FFECE4;
+  --success: #52C41A;
+  --warning: #FAAD14;
+  --danger: #FF4D4F;
+  --bg: #F7F8FA;
+  --card-bg: #FFFFFF;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --border: #E8E8E8;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 28rpx;
+  color: #333333;
+  background-color: #F7F8FA;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+/* ====== 通用工具类 ====== */
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-1 { flex: 1; }
+.flex-wrap { flex-wrap: wrap; }
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+
+/* 文字色 */
+.text-primary { color: #333333; }
+.text-secondary { color: #666666; }
+.text-muted { color: #999999; }
+.text-accent { color: #FF7B54; }
+.text-success { color: #52C41A; }
+.text-danger { color: #FF4D4F; }
+
+/* 间距 */
+.mt-10 { margin-top: 20rpx; }
+.mt-20 { margin-top: 40rpx; }
+.mb-10 { margin-bottom: 20rpx; }
+.mb-20 { margin-bottom: 40rpx; }
+.p-20 { padding: 40rpx; }
+.p-30 { padding: 60rpx; }
+.pl-20 { padding-left: 40rpx; }
+.pr-20 { padding-right: 40rpx; }
+
+/* ====== 通用组件 ====== */
+
+/* 页面容器 */
+.page-container {
+  min-height: 100vh;
+  padding-bottom: 20rpx;
+}
+
+/* 卡片 */
+.card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  margin: 20rpx 30rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+/* 按钮 */
+.btn-primary {
+  background: linear-gradient(135deg, #4A90D9, #6BA8E5);
+  color: #FFFFFF;
+  border-radius: 48rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  padding: 24rpx 60rpx;
+  border: none;
+  text-align: center;
+}
+
+.btn-accent {
+  background: linear-gradient(135deg, #FF7B54, #FF9A6C);
+  color: #FFFFFF;
+  border-radius: 48rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  padding: 24rpx 60rpx;
+  border: none;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #4A90D9;
+  border: 2rpx solid #4A90D9;
+  border-radius: 48rpx;
+  font-size: 28rpx;
+  padding: 18rpx 40rpx;
+}
+
+.btn-primary:active, .btn-accent:active {
+  opacity: 0.85;
+}
+
+/* 标签 */
+.tag {
+  display: inline-block;
+  font-size: 22rpx;
+  padding: 6rpx 20rpx;
+  border-radius: 20rpx;
+  margin-right: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.tag-primary {
+  background: #E8F0FE;
+  color: #4A90D9;
+}
+
+.tag-accent {
+  background: #FFECE4;
+  color: #FF7B54;
+}
+
+.tag-success {
+  background: #E6F7E6;
+  color: #52C41A;
+}
+
+.tag-warning {
+  background: #FFF8E6;
+  color: #FAAD14;
+}
+
+/* 分割线 */
+.divider {
+  height: 2rpx;
+  background: #E8E8E8;
+  margin: 24rpx 0;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 60rpx;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  color: #DDDDDD;
+  margin-bottom: 30rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999999;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.75);
+  color: #FFFFFF;
+  padding: 24rpx 48rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Loading */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+}
+
+.loading-spinner {
+  width: 80rpx;
+  height: 80rpx;
+  border: 6rpx solid #E8E8E8;
+  border-top-color: #4A90D9;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin-top: 30rpx;
+  font-size: 26rpx;
+  color: #999999;
+}
+
+/* 顶部搜索栏 */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #F0F2F5;
+  border-radius: 48rpx;
+  padding: 16rpx 30rpx;
+  margin: 20rpx 30rpx;
+}
+
+.search-bar input {
+  flex: 1;
+  font-size: 28rpx;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #333333;
+}
+
+.search-icon {
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 16rpx;
+  opacity: 0.4;
+}
+
+/* 品种卡片 */
+.breed-card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  margin: 16rpx 30rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+.breed-card-image {
+  width: 100%;
+  height: 340rpx;
+  background: linear-gradient(135deg, #E8F0FE, #F0F5FF);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 160rpx;
+}
+
+.breed-card-info {
+  padding: 24rpx 30rpx;
+}
+
+.breed-card-name {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333333;
+}
+
+.breed-card-en {
+  font-size: 24rpx;
+  color: #999999;
+  margin-top: 4rpx;
+}
+
+.breed-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 16rpx;
+}

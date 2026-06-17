@@ -1,0 +1,68 @@
+<!--pages/history/history.wxml - 历史记录页-->
+<view class="page-container">
+  <!-- 顶部操作栏 -->
+  <view class="history-header" wx:if="{{history.length > 0}}">
+    <view class="history-count">
+      <text>共 {{history.length}} 条识别记录</text>
+    </view>
+    <view class="history-actions">
+      <text class="action-btn" bindtap="batchManage">{{batchMode ? '完成' : '管理'}}</text>
+    </view>
+  </view>
+
+  <!-- 批量管理栏 -->
+  <view class="batch-bar" wx:if="{{batchMode}}">
+    <text class="batch-selected">已选 {{selectedIds.length}} 项</text>
+    <view class="batch-actions">
+      <button class="btn-outline batch-btn" bindtap="batchDelete" disabled="{{selectedIds.length === 0}}">删除选中</button>
+      <button class="btn-primary batch-btn" bindtap="clearAll">全部清除</button>
+    </view>
+  </view>
+
+  <!-- 历史记录列表 -->
+  <view class="history-list" wx:if="{{history.length > 0}}">
+    <view class="history-item {{batchMode ? 'batch-item' : ''}}" wx:for="{{history}}" wx:key="id">
+      <!-- 批量选择框 -->
+      <view class="batch-checkbox" wx:if="{{batchMode}}" bindtap="toggleSelect" data-id="{{item.id}}">
+        <view class="checkbox {{selectedIds.indexOf(item.id) > -1 ? 'checked' : ''}}">
+          <text wx:if="{{selectedIds.indexOf(item.id) > -1}}">✓</text>
+        </view>
+      </view>
+      <!-- 记录内容 -->
+      <view class="history-content" bindtap="viewDetail" data-item="{{item}}">
+        <view class="history-image-wrap">
+          <image class="history-image" src="{{item.imagePath}}" mode="aspectFill" wx:if="{{item.imagePath}}"></image>
+          <text class="history-placeholder" wx:else>🐶</text>
+        </view>
+        <view class="history-info">
+          <view class="history-breed">
+            <text class="history-breed-name">{{item.topBreed.name_zh}}</text>
+            <text class="history-breed-en">{{item.topBreed.name_en}}</text>
+          </view>
+          <view class="history-confidence">
+            <text class="confidence-label">置信度</text>
+            <text class="confidence-value">{{(item.topBreed.confidence * 100).toFixed(1)}}%</text>
+          </view>
+          <text class="history-time">{{item.relativeTime || ''}}</text>
+        </view>
+      </view>
+      <!-- 操作按钮 -->
+      <view class="history-actions-right" wx:if="{{!batchMode}}">
+        <view class="history-action-btn" bindtap="viewBreedDetail" data-id="{{item.topBreed.breed_id}}">
+          <text>📖</text>
+        </view>
+        <view class="history-action-btn" bindtap="deleteItem" data-id="{{item.id}}">
+          <text>🗑️</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{history.length === 0}}">
+    <text class="empty-icon">📸</text>
+    <text class="empty-text">还没有识别记录</text>
+    <text class="empty-sub">去拍张狗狗的照片开始识别吧</text>
+    <button class="btn-primary" style="margin-top: 40rpx;" bindtap="goIdentify">去识别</button>
+  </view>
+</view>

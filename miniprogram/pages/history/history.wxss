@@ -1,0 +1,187 @@
+/* pages/history/history.wxss */
+
+/* 顶部栏 */
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+}
+
+.history-count {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+.action-btn {
+  font-size: 28rpx;
+  color: #4A90D9;
+  padding: 8rpx 16rpx;
+}
+
+/* 批量管理栏 */
+.batch-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 30rpx;
+  background: #FFF9F0;
+  margin: 0 30rpx 16rpx;
+  border-radius: 16rpx;
+}
+
+.batch-selected {
+  font-size: 26rpx;
+  color: #D4380D;
+}
+
+.batch-actions {
+  display: flex;
+  gap: 12rpx;
+}
+
+.batch-btn {
+  padding: 10rpx 24rpx;
+  font-size: 24rpx;
+}
+
+/* 历史列表 */
+.history-list {
+  padding: 0 30rpx;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.batch-item {
+  padding-left: 16rpx;
+}
+
+/* 批量选择框 */
+.batch-checkbox {
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.checkbox {
+  width: 44rpx;
+  height: 44rpx;
+  border: 3rpx solid #DDDDDD;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #FFFFFF;
+}
+
+.checkbox.checked {
+  background: #4A90D9;
+  border-color: #4A90D9;
+}
+
+/* 记录内容 */
+.history-content {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.history-image-wrap {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  margin-right: 20rpx;
+  background: #F0F2F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.history-image {
+  width: 100%;
+  height: 100%;
+}
+
+.history-placeholder {
+  font-size: 60rpx;
+}
+
+.history-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.history-breed-name {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 2rpx;
+}
+
+.history-breed-en {
+  display: block;
+  font-size: 22rpx;
+  color: #999999;
+  margin-bottom: 10rpx;
+}
+
+.history-confidence {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6rpx;
+}
+
+.confidence-label {
+  font-size: 22rpx;
+  color: #999999;
+  margin-right: 10rpx;
+}
+
+.confidence-value {
+  font-size: 24rpx;
+  color: #4A90D9;
+  font-weight: 700;
+}
+
+.history-time {
+  font-size: 22rpx;
+  color: #BBBBBB;
+}
+
+/* 右侧操作按钮 */
+.history-actions-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin-left: 12rpx;
+  flex-shrink: 0;
+}
+
+.history-action-btn {
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: 50%;
+  background: #F7F8FA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+}
+
+.empty-sub {
+  font-size: 24rpx;
+  color: #CCCCCC;
+  margin-top: 12rpx;
+}

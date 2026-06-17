@@ -1,0 +1,71 @@
+<!--pages/wiki/wiki.wxml - 品种百科列表页-->
+<view class="page-container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <image class="search-icon" src="/images/icon-search.png" mode="aspectFit"></image>
+    <input
+      placeholder="搜索犬种名称、原产地、性格..."
+      value="{{searchKeyword}}"
+      bindinput="onSearchInput"
+      bindconfirm="onSearch"
+      confirm-type="search"
+    />
+    <text class="search-clear" wx:if="{{searchKeyword}}" bindtap="clearSearch">✕</text>
+  </view>
+
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <scroll-view class="filter-scroll" scroll-x="true" show-scrollbar="{{false}}">
+      <view class="filter-item {{activeSize === '' ? 'active' : ''}}" bindtap="filterBySize" data-size="">全部</view>
+      <view class="filter-item {{activeSize === item ? 'active' : ''}}" wx:for="{{sizes}}" wx:key="*this" bindtap="filterBySize" data-size="{{item}}">{{item}}</view>
+    </scroll-view>
+    <view class="filter-sort" bindtap="toggleSort">
+      <text>{{sortAsc ? '↑' : '↓'}} 名称</text>
+    </view>
+  </view>
+
+  <!-- 品种列表 -->
+  <view class="breed-list" wx:if="{{displayBreeds.length > 0}}">
+    <view class="breed-card" wx:for="{{displayBreeds}}" wx:key="breed_id" bindtap="viewDetail" data-id="{{item.breed_id}}">
+      <view class="breed-card-image">
+        <text>{{item.emoji || '🐶'}}</text>
+      </view>
+      <view class="breed-card-info">
+        <view class="flex-between">
+          <view>
+            <text class="breed-card-name">{{item.name_zh}}</text>
+            <text class="breed-card-en">{{item.name_en}}</text>
+          </view>
+          <text class="fav-icon">{{favorites.indexOf(item.breed_id) > -1 ? '❤️' : '🤍'}}</text>
+        </view>
+        <view class="breed-card-tags">
+          <text class="tag tag-accent">{{item.size}}</text>
+          <text class="tag tag-primary">{{item.group}}</text>
+          <text class="tag tag-warning">{{item.origin}}</text>
+        </view>
+        <view class="breed-card-temperament">
+          <text class="tag tag-success" wx:for="{{item.temperament}}" wx:key="*this" wx:for-item="t">{{t}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{displayBreeds.length === 0}}">
+    <text class="empty-icon">🔍</text>
+    <text class="empty-text">没有找到匹配的犬种</text>
+    <text class="empty-sub">试试其他搜索词吧</text>
+  </view>
+
+  <!-- 对比栏 -->
+  <view class="compare-bar" wx:if="{{compareList.length > 0}}">
+    <view class="compare-count">
+      <text>已选 {{compareList.length}} 个品种</text>
+      <text class="compare-max">（最多3个）</text>
+    </view>
+    <view class="compare-actions">
+      <text class="compare-clear" bindtap="clearCompare">清空</text>
+      <button class="btn-primary compare-btn" bindtap="startCompare">开始对比</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,106 @@
+/* pages/wiki/wiki.wxss */
+
+/* 搜索栏 */
+.search-clear {
+  font-size: 28rpx;
+  color: #999999;
+  padding: 0 12rpx;
+}
+
+/* 筛选栏 */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  padding: 0 30rpx 16rpx;
+  gap: 16rpx;
+}
+
+.filter-scroll {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.filter-item {
+  display: inline-block;
+  font-size: 26rpx;
+  color: #666666;
+  background: #F0F2F5;
+  padding: 12rpx 28rpx;
+  border-radius: 32rpx;
+  margin-right: 14rpx;
+  transition: all 0.2s;
+}
+
+.filter-item.active {
+  background: #4A90D9;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.filter-sort {
+  flex-shrink: 0;
+  font-size: 24rpx;
+  color: #4A90D9;
+  padding: 12rpx 16rpx;
+}
+
+/* 品种卡片 - 使用全局 .breed-card 样式 */
+
+/* 体温表/性格标签 */
+.breed-card-temperament {
+  margin-top: 12rpx;
+}
+
+.fav-icon {
+  font-size: 32rpx;
+}
+
+/* 对比栏 */
+.compare-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #FFFFFF;
+  border-top: 2rpx solid #E8E8E8;
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.06);
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.compare-count {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.compare-max {
+  font-size: 22rpx;
+  color: #999999;
+}
+
+.compare-actions {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.compare-clear {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+.compare-btn {
+  padding: 16rpx 40rpx;
+  font-size: 26rpx;
+}
+
+.empty-sub {
+  font-size: 24rpx;
+  color: #CCCCCC;
+  margin-top: 12rpx;
+}

@@ -1,0 +1,271 @@
+/* pages/detail/detail.wxss */
+
+/* 品种头部 */
+.breed-hero {
+  background: linear-gradient(135deg, #4A90D9 0%, #6BA8E5 100%);
+  margin: 0 30rpx 20rpx;
+  border-radius: 32rpx;
+  padding: 50rpx 40rpx;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.breed-emoji-wrap {
+  width: 140rpx;
+  height: 140rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 30rpx;
+  flex-shrink: 0;
+}
+
+.breed-emoji {
+  font-size: 80rpx;
+}
+
+.breed-hero-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.breed-name {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 6rpx;
+}
+
+.breed-name-en {
+  display: block;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 16rpx;
+}
+
+.breed-basic-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.fav-btn {
+  position: absolute;
+  top: 30rpx;
+  right: 30rpx;
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+}
+
+/* 卡片标题 */
+.card-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 24rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 2rpx solid #F0F2F5;
+}
+
+/* 信息网格 */
+.info-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.info-item {
+  width: 33.33%;
+  padding: 16rpx 0;
+}
+
+.info-label {
+  display: block;
+  font-size: 22rpx;
+  color: #999999;
+  margin-bottom: 6rpx;
+}
+
+.info-value {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+/* 性格特征 */
+.temperament-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.temperament-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.temperament-name {
+  width: 120rpx;
+  font-size: 26rpx;
+  color: #333333;
+}
+
+.temperament-bar {
+  flex: 1;
+  height: 12rpx;
+  background: #F0F2F5;
+  border-radius: 6rpx;
+  overflow: hidden;
+}
+
+.temperament-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FF7B54, #FF9A6C);
+  border-radius: 6rpx;
+}
+
+/* 能力指标 */
+.ability-item {
+  margin-bottom: 28rpx;
+}
+
+.ability-item:last-child { margin-bottom: 0; }
+
+.ability-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.ability-name {
+  font-size: 26rpx;
+  color: #333333;
+}
+
+.ability-level {
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.level-high { color: #52C41A; }
+.level-mid-high { color: #4A90D9; }
+.level-mid { color: #FAAD14; }
+.level-low { color: #FF4D4F; }
+
+.ability-bar {
+  height: 10rpx;
+  background: #F0F2F5;
+  border-radius: 5rpx;
+  overflow: hidden;
+}
+
+.ability-fill {
+  height: 100%;
+  border-radius: 5rpx;
+}
+
+.fill-high { background: #52C41A; }
+.fill-mid-high { background: #4A90D9; }
+.fill-mid { background: #FAAD14; }
+.fill-low { background: #FF4D4F; }
+
+/* 毛发网格 */
+.coat-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.coat-item {
+  width: calc(50% - 10rpx);
+}
+
+.coat-item.full-width {
+  width: 100%;
+}
+
+.coat-label {
+  display: block;
+  font-size: 24rpx;
+  color: #999999;
+  margin-bottom: 8rpx;
+}
+
+.coat-value {
+  display: block;
+  font-size: 28rpx;
+  color: #333333;
+  font-weight: 500;
+}
+
+.color-tags {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 8rpx;
+}
+
+/* 内容文本 */
+.content-text {
+  font-size: 28rpx;
+  color: #555555;
+  line-height: 1.8;
+}
+
+/* 疾病列表 */
+.disease-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.disease-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 12rpx 0;
+}
+
+.disease-dot {
+  color: #FF4D4F;
+  font-size: 28rpx;
+  margin-right: 16rpx;
+}
+
+.disease-name {
+  font-size: 26rpx;
+  color: #666666;
+}
+
+/* 冷知识卡片 */
+.fun-fact-card {
+  background: linear-gradient(135deg, #FFF9F0, #FFECE4);
+  border: 2rpx solid #FFE0D0;
+}
+
+.fun-fact-content {
+  display: flex;
+  align-items: flex-start;
+}
+
+.fun-fact-icon {
+  font-size: 36rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.fun-fact-text {
+  font-size: 28rpx;
+  color: #D4380D;
+  line-height: 1.7;
+  font-style: italic;
+}

@@ -1,0 +1,156 @@
+/* pages/stats/stats.wxss */
+
+/* 概览卡片 */
+.stat-cards {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 30rpx 20rpx;
+  gap: 16rpx;
+}
+
+.stat-card {
+  width: calc(50% - 8rpx);
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 30rpx 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.stat-card.accent {
+  background: linear-gradient(135deg, #FFF0E8, #FFECE4);
+}
+
+.stat-card.success {
+  background: linear-gradient(135deg, #E8F8E8, #E6F7E6);
+}
+
+.stat-card.warning {
+  background: linear-gradient(135deg, #FFF8E6, #FFFBE6);
+}
+
+.stat-num {
+  display: block;
+  font-size: 48rpx;
+  font-weight: 800;
+  color: #333333;
+  margin-bottom: 8rpx;
+}
+
+.stat-card.accent .stat-num { color: #FF7B54; }
+.stat-card.success .stat-num { color: #52C41A; }
+.stat-card.warning .stat-num { color: #FAAD14; }
+
+.stat-desc {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 图表容器 */
+.chart-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart {
+  display: block;
+}
+
+/* 体型分布 */
+.size-distribution {
+  padding: 10rpx 0;
+}
+
+.size-bar-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 28rpx;
+}
+
+.size-bar-item:last-child { margin-bottom: 0; }
+
+.size-bar-label {
+  font-size: 26rpx;
+  color: #333333;
+  width: 120rpx;
+  flex-shrink: 0;
+}
+
+.size-bar {
+  flex: 1;
+  height: 16rpx;
+  background: #F0F2F5;
+  border-radius: 8rpx;
+  overflow: hidden;
+  margin: 0 20rpx;
+}
+
+.size-bar-fill {
+  height: 100%;
+  border-radius: 8rpx;
+  transition: width 0.8s ease;
+}
+
+.size-bar-fill.small { background: linear-gradient(90deg, #FF7B54, #FF9A6C); }
+.size-bar-fill.medium { background: linear-gradient(90deg, #4A90D9, #6BA8E5); }
+.size-bar-fill.large { background: linear-gradient(90deg, #52C41A, #73D13D); }
+
+.size-bar-value {
+  font-size: 24rpx;
+  color: #999999;
+  width: 70rpx;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* 每日详情列表 */
+.daily-list {
+  padding: 10rpx 0;
+}
+
+.daily-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 0;
+}
+
+.daily-date {
+  font-size: 24rpx;
+  color: #666666;
+  width: 120rpx;
+  flex-shrink: 0;
+}
+
+.daily-bar-wrap {
+  flex: 1;
+  height: 20rpx;
+  background: #F0F2F5;
+  border-radius: 10rpx;
+  overflow: hidden;
+  margin: 0 16rpx;
+}
+
+.daily-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4A90D9, #6BA8E5);
+  border-radius: 10rpx;
+  transition: width 0.5s ease;
+}
+
+.daily-count {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #4A90D9;
+  width: 50rpx;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.empty-inline {
+  display: block;
+  text-align: center;
+  font-size: 26rpx;
+  color: #CCCCCC;
+  padding: 40rpx 0;
+}
