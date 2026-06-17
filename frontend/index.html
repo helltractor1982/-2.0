@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>犬博士 · 宠物犬品种智能鉴别系统</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ====== 侧边栏导航 ====== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand" onclick="showPage('home')">
+      <div class="sidebar-logo">🐕</div>
+      <div class="sidebar-title">
+        <div class="sidebar-title-main">犬博士</div>
+        <div class="sidebar-title-sub">AI 品种鉴别系统</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="nav-item active" id="nav-home" onclick="showPage('home')">
+        <span class="nav-icon">🏠</span> 首页
+      </a>
+      <a class="nav-item" id="nav-identify" onclick="showPage('identify')">
+        <span class="nav-icon">🔍</span> 品种识别
+      </a>
+      <a class="nav-item" id="nav-wiki" onclick="showPage('wiki')">
+        <span class="nav-icon">📚</span> 知识百科
+      </a>
+      <a class="nav-item" id="nav-history" onclick="showPage('history')">
+        <span class="nav-icon">📋</span> 识别历史
+      </a>
+      <a class="nav-item" id="nav-stats" onclick="showPage('stats')">
+        <span class="nav-icon">📊</span> 数据统计
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a class="nav-item" id="nav-about" onclick="showPage('about')">
+        <span class="nav-icon">ℹ️</span> 关于
+      </a>
+      <div class="sidebar-status">
+        <span class="status-dot"></span> 系统运行中 · v1.0
+      </div>
+    </div>
+  </aside>
+
+  <!-- ====== 主内容区域 ====== -->
+  <main class="main-content">
+
+    <!-- ========== 首页 ========== -->
+    <section class="page active" id="page-home">
+      <div class="home-hero">
+        <div class="home-hero-content">
+          <h1>犬博士 · AI 犬种鉴别系统</h1>
+          <p>基于深度学习 ResNet50+CBAM 模型，Top-1 准确率 82.50%，Top-5 准确率 97.94%。支持识别 120 个犬种品种，上传犬只照片 AI 即刻分析品种并生成养护建议。</p>
+          <div class="home-hero-actions">
+            <button class="btn btn-primary btn-lg" onclick="showPage('identify');setTimeout(triggerCamera,100)">
+              📷 立即识别
+            </button>
+            <button class="btn btn-outline-white btn-lg" onclick="showPage('wiki')">
+              📚 浏览品种百科
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-card-num">120</div>
+            <div class="stat-card-label">收录品种</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num" id="home-total-count">15,823</div>
+            <div class="stat-card-label">累计识别</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num">ResNet50+CBAM</div>
+            <div class="stat-card-label">AI 模型</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num">&lt; 3s</div>
+            <div class="stat-card-label">识别速度</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <div class="section-header">
+          <h2>🚀 快速操作</h2>
+        </div>
+        <div class="quick-cards">
+          <div class="quick-card primary" onclick="showPage('identify');setTimeout(triggerCamera,100)">
+            <div class="quick-card-icon">📷</div>
+            <div class="quick-card-title">拍照识别</div>
+            <div class="quick-card-desc">调用摄像头拍摄犬只照片，即刻识别品种</div>
+          </div>
+          <div class="quick-card" onclick="showPage('identify')">
+            <div class="quick-card-icon">🖼️</div>
+            <div class="quick-card-title">上传图片</div>
+            <div class="quick-card-desc">从本地选择犬只图片进行识别分析</div>
+          </div>
+          <div class="quick-card" onclick="showPage('wiki')">
+            <div class="quick-card-icon">📖</div>
+            <div class="quick-card-title">品种百科</div>
+            <div class="quick-card-desc">浏览 120 个品种的完整资料和养护知识</div>
+          </div>
+          <div class="quick-card" onclick="showPage('history')">
+            <div class="quick-card-icon">📋</div>
+            <div class="quick-card-title">识别历史</div>
+            <div class="quick-card-desc">查看过往识别记录，支持导出 CSV</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <div class="section-header">
+          <h2>📊 品种统计</h2>
+        </div>
+        <div class="breed-stats-row">
+          <div class="breed-stat-card">
+            <div class="breed-stat-icon">🐾</div>
+            <div>
+              <div class="breed-stat-num">120</div>
+              <div class="breed-stat-label">收录品种</div>
+            </div>
+          </div>
+          <div class="breed-stat-card">
+            <div class="breed-stat-icon">🏷️</div>
+            <div>
+              <div class="breed-stat-num">8</div>
+              <div class="breed-stat-label">犬种类别</div>
+            </div>
+          </div>
+          <div class="breed-stat-card">
+            <div class="breed-stat-icon">📏</div>
+            <div>
+              <div class="breed-stat-num">5</div>
+              <div class="breed-stat-label">体型分类</div>
+            </div>
+          </div>
+          <div class="breed-stat-card">
+            <div class="breed-stat-icon">📖</div>
+            <div>
+              <div class="breed-stat-num">1,200+</div>
+              <div class="breed-stat-label">百科条目</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <div class="section-header">
+          <h2>🔥 热门搜索</h2>
+        </div>
+        <div class="hot-tags-wrap">
+          <span class="hot-tag" onclick="showPage('wiki')">哈士奇</span>
+          <span class="hot-tag" onclick="showPage('wiki')">金毛寻回犬</span>
+          <span class="hot-tag" onclick="showPage('wiki')">拉布拉多</span>
+          <span class="hot-tag" onclick="showPage('wiki')">柯基犬</span>
+          <span class="hot-tag" onclick="showPage('wiki')">柴犬</span>
+          <span class="hot-tag" onclick="showPage('wiki')">萨摩耶</span>
+          <span class="hot-tag" onclick="showPage('wiki')">泰迪犬</span>
+          <span class="hot-tag" onclick="showPage('wiki')">边境牧羊犬</span>
+          <span class="hot-tag" onclick="showPage('wiki')">法国斗牛犬</span>
+          <span class="hot-tag" onclick="showPage('wiki')">阿拉斯加</span>
+          <span class="hot-tag" onclick="showPage('wiki')">德国牧羊犬</span>
+          <span class="hot-tag" onclick="showPage('wiki')">博美犬</span>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <div class="section-header">
+          <h2>🌟 今日推荐品种</h2>
+        </div>
+        <div class="card daily-card" id="daily-recommend" onclick="openDailyBreed()" style="cursor:pointer;">
+          <div class="skeleton" style="height:24px;width:60%;margin-bottom:12px;"></div>
+          <div class="skeleton" style="height:16px;width:80%;margin-bottom:8px;"></div>
+          <div class="skeleton" style="height:16px;width:40%;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 识别页 ========== -->
+    <section class="page" id="page-identify">
+      <div class="identify-hero">
+        <h1>🔍 品种识别</h1>
+        <p>上传犬只图片，AI 深度学习模型自动分析品种信息</p>
+      </div>
+
+      <div class="identify-layout">
+        <div class="identify-left">
+          <div id="upload-section">
+            <div class="upload-zone" id="upload-zone"
+              onclick="document.getElementById('file-input').click()"
+              ondragover="event.preventDefault();this.classList.add('dragover')"
+              ondragleave="this.classList.remove('dragover')"
+              ondrop="handleDrop(event)">
+              <div class="upload-zone-icon">🐶</div>
+              <div class="upload-zone-title">点击上传或拖拽图片到此处</div>
+              <div class="upload-zone-desc">支持 JPG / PNG / WEBP / BMP 格式，单张不超过 10MB</div>
+              <div class="upload-zone-btns">
+                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();document.getElementById('file-input').click()">📁 选择文件</button>
+                <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();useDemo()">🎯 试用示例</button>
+              </div>
+            </div>
+            <input type="file" id="file-input" accept="image/*" onchange="handleFileSelect(event)">
+          </div>
+
+          <div class="identify-tips-card">
+            <div class="identify-tips-title">💡 识别小贴士</div>
+            <ul class="identify-tips-list">
+              <li>选择正面、光线充足的照片，识别准确率更高</li>
+              <li>尽量避免背景复杂或多人多犬的照片</li>
+              <li>全身照比局部照效果更好</li>
+              <li>支持 JPG / PNG / WEBP / BMP 格式，单张不超过 10MB</li>
+            </ul>
+          </div>
+
+          <div id="preview-section" style="display:none;">
+            <div class="preview-wrap">
+              <img id="preview-img" class="preview-img" src="" alt="预览图">
+            </div>
+            <div class="preview-actions">
+              <button class="btn btn-ghost btn-sm" onclick="clearPreview()">🔄 重新上传</button>
+              <button class="btn btn-primary" onclick="startIdentify()" id="identify-btn">🔍 开始识别</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="identify-right">
+          <div id="skeleton-section" style="display:none;">
+            <div class="card"><div class="skeleton" style="height:24px;width:70%;margin-bottom:12px;"></div><div class="skeleton" style="height:16px;width:40%;margin-bottom:8px;"></div><div class="skeleton" style="height:80px;border-radius:8px;"></div></div>
+          </div>
+
+          <div id="result-section" style="display:none;">
+            <div class="result-card" id="main-result"></div>
+            <div class="alternatives" style="margin-top:16px;">
+              <div class="alternatives-header" onclick="toggleAlts()">
+                <span>📊 其他可能结果</span><span id="alt-toggle">▼</span>
+              </div>
+              <div id="alt-list"></div>
+            </div>
+            <div class="identify-actions" style="margin-top:12px;display:flex;gap:10px;">
+              <button class="btn btn-primary" style="flex:1;" onclick="viewDetailFromResult()">📖 查看详情</button>
+              <button class="btn btn-ghost" style="flex:1;" onclick="saveToHistory()">💾 保存记录</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 品种详情 ========== -->
+    <section class="page" id="page-detail">
+      <div class="page-header">
+        <button class="btn btn-ghost btn-sm" onclick="goBack()" style="margin-bottom:12px;">← 返回</button>
+        <h1 id="detail-breed-name"></h1>
+        <p id="detail-breed-en" style="color:var(--text-secondary);"></p>
+        <div id="detail-tags" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;"></div>
+      </div>
+      <div id="detail-content"></div>
+    </section>
+
+    <!-- ========== 知识百科 ========== -->
+    <section class="page" id="page-wiki">
+      <div class="page-header">
+        <h1>📚 品种百科</h1>
+        <p>收录 120 个犬种的完整资料与养护知识</p>
+        <div class="wiki-header-stats">
+          <div class="wiki-header-stat"><strong>120</strong> 收录品种</div>
+          <div class="wiki-header-stat"><strong>8</strong> 犬种类别</div>
+          <div class="wiki-header-stat"><strong>5</strong> 体型分类</div>
+          <div class="wiki-header-stat"><strong>1,200+</strong> 百科条目</div>
+        </div>
+      </div>
+
+      <div class="wiki-toolbar">
+        <div class="search-bar">
+          <span>🔍</span>
+          <input class="search-input" id="wiki-search" type="text" placeholder="搜索品种名称、英文名、原产地..." oninput="onSearchInput()">
+          <span id="search-clear" onclick="clearSearch()" style="display:none;cursor:pointer;" title="清除">✕</span>
+        </div>
+        <div class="wiki-actions">
+          <button class="btn btn-outline btn-sm" id="compare-btn" onclick="showCompare()" style="display:none;">
+            对比已选 (<span id="compare-count">0</span>)
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-chips" id="filter-chips">
+        <div class="chip active" onclick="filterBreeds(this,'all')">全部</div>
+        <div class="chip" onclick="filterBreeds(this,'玩具犬')">玩具犬</div>
+        <div class="chip" onclick="filterBreeds(this,'小型犬')">小型犬</div>
+        <div class="chip" onclick="filterBreeds(this,'中型犬')">中型犬</div>
+        <div class="chip" onclick="filterBreeds(this,'大型犬')">大型犬</div>
+        <div class="chip" onclick="filterBreeds(this,'超大型犬')">超大型犬</div>
+        <div class="chip" onclick="filterBreeds(this,'中国原产')">中国原产</div>
+        <div class="chip" onclick="filterBreeds(this,'低掉毛')">低掉毛</div>
+      </div>
+
+      <div style="margin-bottom:8px;padding:0 32px;">
+        <span id="compare-hint" style="font-size:13px;color:var(--text-hint);">勾选 2-3 个品种可进行横向对比</span>
+      </div>
+
+      <div class="wiki-grid" id="wiki-breed-list"></div>
+      <div id="wiki-load-more" style="padding:20px;text-align:center;display:none;">
+        <button class="btn btn-ghost" onclick="loadMoreBreeds()">加载更多</button>
+      </div>
+    </section>
+
+    <!-- ========== 历史记录 ========== -->
+    <section class="page" id="page-history">
+      <div class="page-header">
+        <div class="page-header-row">
+          <div>
+            <h1>📋 识别历史</h1>
+            <p>本地保存，最多 100 条记录</p>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-outline btn-sm" onclick="exportCSV()">📥 导出 CSV</button>
+            <button class="btn btn-sm" style="background:#fee2e2;color:#dc2626;" onclick="clearAllHistory()">🗑️ 清空</button>
+          </div>
+        </div>
+      </div>
+      <div id="history-count" style="padding:0 32px 12px;font-size:13px;color:var(--text-hint);">共 0 条记录</div>
+      <div id="history-list" class="history-grid"></div>
+      <div id="history-empty" class="empty-state" style="display:none;">
+        <div class="empty-icon">🐾</div>
+        <div class="empty-title">暂无识别记录</div>
+        <div class="empty-desc">拍照或上传犬只图片，开始你的第一次识别吧</div>
+        <button class="btn btn-primary" style="margin-top:16px;" onclick="showPage('identify')">去识别</button>
+      </div>
+    </section>
+
+    <!-- ========== 数据统计 ========== -->
+    <section class="page" id="page-stats">
+      <div class="page-header">
+        <h1>📊 数据统计</h1>
+        <p>模型表现与使用数据可视化分析</p>
+      </div>
+
+      <div class="content-section">
+        <div class="stats-row" style="padding:0;">
+          <div class="stat-card">
+            <div class="stat-card-num">15,823</div>
+            <div class="stat-card-label">累计识别次数</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num">120</div>
+            <div class="stat-card-label">收录品种数</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num">82.50%</div>
+            <div class="stat-card-label">Top-1 准确率</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-num">97.94%</div>
+            <div class="stat-card-label">Top-5 准确率</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-panel">
+          <div class="card-title">🥇 品种识别排行 Top 10</div>
+          <div id="chart-breed-dist" style="height:320px;"></div>
+        </div>
+        <div class="chart-panel">
+          <div class="card-title">📊 识别置信度分布</div>
+          <div id="chart-confidence" style="height:320px;"></div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-panel">
+          <div class="card-title">📈 模型训练准确率曲线</div>
+          <div id="chart-train-acc" style="height:300px;"></div>
+          <div style="text-align:center;margin-top:10px;">
+            <a href="/static/charts/training_curves.png" target="_blank" style="color:var(--text-hint);font-size:12px;text-decoration:none;">📷 查看真实训练曲线大图 →</a>
+          </div>
+        </div>
+        <div class="chart-panel">
+          <div class="card-title">📉 模型损失曲线</div>
+          <div id="chart-train-loss" style="height:300px;"></div>
+          <div style="text-align:center;margin-top:10px;">
+            <a href="/static/charts/training_curves.png" target="_blank" style="color:var(--text-hint);font-size:12px;text-decoration:none;">📷 查看真实训练曲线大图 →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <div class="chart-panel">
+          <div class="card-title">🌡️ Top 8 品种混淆热力图</div>
+          <div id="chart-confusion" style="height:360px;"></div>
+          <div style="text-align:center;margin-top:10px;">
+            <a href="/static/charts/confusion_matrix.png" target="_blank" style="color:var(--text-hint);font-size:12px;text-decoration:none;">📷 查看完整 120×120 混淆矩阵大图 →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 关于 ========== -->
+    <section class="page" id="page-about">
+      <div class="page-header">
+        <h1>ℹ️ 关于犬博士</h1>
+        <p>一拍即知品种 · 一键获取养护建议</p>
+      </div>
+
+      <div class="content-section">
+        <div class="about-grid">
+          <div class="about-feature">
+            <div class="about-feature-icon">🔍</div>
+            <div class="about-feature-title">AI 品种识别</div>
+            <div class="about-feature-desc">基于 ResNet50 + CBAM 注意力机制深度学习模型，支持 120 个犬种的高精度图像分类识别（Top-1 82.50%，Top-5 97.94%）</div>
+          </div>
+          <div class="about-feature">
+            <div class="about-feature-icon">📚</div>
+            <div class="about-feature-title">品种知识库</div>
+            <div class="about-feature-desc">每个品种包含基本信息、性格特点、养护建议、常见疾病等完整资料</div>
+          </div>
+          <div class="about-feature">
+            <div class="about-feature-icon">📋</div>
+            <div class="about-feature-title">识别历史</div>
+            <div class="about-feature-desc">本地保存最多 100 条识别记录，支持 CSV 格式导出</div>
+          </div>
+          <div class="about-feature">
+            <div class="about-feature-icon">📊</div>
+            <div class="about-feature-title">数据可视化</div>
+            <div class="about-feature-desc">训练曲线、品种分布、置信度分析等多维度可视化图表</div>
+          </div>
+          <div class="about-feature">
+            <div class="about-feature-icon">⚖️</div>
+            <div class="about-feature-title">品种对比</div>
+            <div class="about-feature-desc">支持 2-3 个品种的横向属性对比分析</div>
+          </div>
+          <div class="about-feature">
+            <div class="about-feature-icon">🤖</div>
+            <div class="about-feature-title">持续学习</div>
+            <div class="about-feature-desc">模型基于 Stanford Dogs 数据集训练，支持后续扩展更多品种</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <div class="card disclaimer">
+          <div class="disclaimer-title">⚠️ 免责声明</div>
+          <div class="disclaimer-text">本系统识别结果仅供参考，不能作为专业医学或品种鉴定的唯一依据。如需准确鉴定，请咨询专业兽医或犬只鉴定机构。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 对比弹窗 ========== -->
+    <div class="modal-overlay" id="compare-modal" onclick="closeCompare(event)">
+      <div class="modal-dialog" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <h3>品种横向对比</h3>
+          <span class="modal-close" onclick="document.getElementById('compare-modal').classList.remove('show')">✕</span>
+        </div>
+        <div id="compare-content" style="overflow-x:auto;"></div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="spinner"></div>
+      <div>AI 识别中，请稍候...</div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+  </main>
+
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
