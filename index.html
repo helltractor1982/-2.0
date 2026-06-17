@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>犬博士 Dog Doctor - AI 犬种智能识别</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+/* ====== CSS Reset & Variables ====== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#D4914A;
+  --primary-light:#E8B87A;
+  --primary-dark:#A0652A;
+  --accent:#4A90D9;
+  --accent-light:#7AB5E8;
+  --bg:#FAF7F2;
+  --bg-card:rgba(255,255,255,0.72);
+  --bg-glass:rgba(255,255,255,0.55);
+  --text:#2D2418;
+  --text-secondary:#6B5D4F;
+  --text-muted:#9B8D7F;
+  --border:rgba(180,160,140,0.2);
+  --shadow-sm:0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md:0 8px 32px rgba(0,0,0,0.08);
+  --shadow-lg:0 16px 48px rgba(0,0,0,0.12);
+  --radius-sm:10px;
+  --radius-md:16px;
+  --radius-lg:24px;
+  --radius-xl:32px;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  --transition:0.3s cubic-bezier(0.4,0,0.2,1);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+/* ====== Background Decor ====== */
+.bg-decor{
+  position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%,rgba(212,145,74,0.08) 0%,transparent 70%),
+    radial-gradient(ellipse 60% 50% at 10% 80%,rgba(74,144,217,0.05) 0%,transparent 70%),
+    radial-gradient(ellipse 50% 50% at 90% 30%,rgba(212,145,74,0.06) 0%,transparent 70%);
+}
+/* ====== Navigation ====== */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,247,242,0.85);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;
+}
+.nav-inner{
+  max-width:1280px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
+}
+.nav-logo{
+  display:flex;align-items:center;gap:10px;
+  font-size:1.25rem;font-weight:700;
+  color:var(--text);text-decoration:none;
+}
+.nav-logo .logo-icon{
+  width:38px;height:38px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;color:#fff;
+}
+.nav-links{display:flex;gap:4px;list-style:none}
+.nav-links a{
+  text-decoration:none;color:var(--text-secondary);
+  padding:8px 16px;border-radius:var(--radius-sm);
+  font-size:0.9rem;font-weight:500;
+  transition:var(--transition);
+}
+.nav-links a:hover,.nav-links a.active{
+  color:var(--primary-dark);
+  background:rgba(212,145,74,0.1);
+}
+/* ====== Container ====== */
+.container{max-width:1280px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+/* ====== Hero Section ====== */
+.hero{
+  padding:60px 0 40px;
+  text-align:center;
+  position:relative;z-index:1;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(212,145,74,0.12);
+  color:var(--primary-dark);
+  padding:6px 16px;border-radius:20px;
+  font-size:0.85rem;font-weight:600;
+  margin-bottom:20px;
+}
+.hero h1{
+  font-size:3rem;font-weight:800;
+  background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 50%,var(--accent) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:12px;
+  letter-spacing:-0.02em;
+}
+.hero p{
+  font-size:1.1rem;color:var(--text-secondary);
+  max-width:560px;margin:0 auto 32px;
+}
+/* Hero Stats Strip */
+.hero-stats{
+  display:flex;gap:16px;justify-content:center;
+  flex-wrap:wrap;margin-bottom:40px;
+}
+.hero-stat{
+  background:var(--bg-card);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-radius:var(--radius-md);
+  padding:16px 28px;
+  text-align:center;
+  box-shadow:var(--shadow-sm);
+  border:1px solid var(--border);
+  min-width:120px;
+  transition:all var(--transition);
+}
+.hero-stat:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-md);
+  border-color:var(--primary-light);
+}
+.hero-stat-num{
+  font-size:1.6rem;font-weight:800;
+  background:linear-gradient(135deg,var(--primary-dark),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-stat-label{
+  font-size:0.78rem;color:var(--text-muted);
+  margin-top:2px;
+}
+
+/* ====== Upload Zone ====== */
+.upload-section{
+  margin-bottom:48px;position:relative;z-index:1;
+}
+.upload-zone{
+  position:relative;
+  background:var(--bg-card);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border:2px dashed rgba(180,160,140,0.4);
+  border-radius:var(--radius-lg);
+  padding:48px 32px;
+  text-align:center;
+  cursor:pointer;
+  transition:all var(--transition);
+  overflow:hidden;
+}
+.upload-zone::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(212,145,74,0.04),rgba(74,144,217,0.04));
+  opacity:0;transition:opacity var(--transition);
+}
+.upload-zone:hover,.upload-zone.drag-over{
+  border-color:var(--primary-light);
+  background:rgba(255,255,255,0.85);
+  box-shadow:var(--shadow-md);
+  transform:translateY(-2px);
+}
+.upload-zone:hover::before,.upload-zone.drag-over::before{opacity:1}
+.upload-zone.drag-over{
+  border-style:solid;
+  border-color:var(--primary);
+  background:rgba(212,145,74,0.06);
+}
+.upload-icon{
+  width:72px;height:72px;
+  margin:0 auto 16px;
+  background:linear-gradient(135deg,rgba(212,145,74,0.15),rgba(212,145,74,0.08));
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;
+}
+.upload-zone h3{font-size:1.2rem;margin-bottom:8px;color:var(--text)}
+.upload-zone .hint{color:var(--text-muted);font-size:0.9rem}
+.upload-zone .hint span{color:var(--primary);font-weight:600;cursor:pointer}
+.upload-zone input[type=file]{display:none}
+
+/* ====== Preview ====== */
+.preview-area{
+  display:none;
+  margin-top:24px;
+  background:var(--bg-card);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-radius:var(--radius-lg);
+  padding:24px;
+  box-shadow:var(--shadow-sm);
+}
+.preview-area.show{display:block}
+.preview-inner{
+  display:flex;gap:24px;align-items:flex-start;
+}
+.preview-img-wrap{
+  flex-shrink:0;width:200px;height:200px;
+  border-radius:var(--radius-md);overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+.preview-img-wrap img{
+  width:100%;height:100%;object-fit:cover;
+}
+.preview-info{flex:1}
+.preview-info .file-name{
+  font-weight:600;font-size:1rem;margin-bottom:4px;
+  word-break:break-all;
+}
+.preview-info .file-size{
+  color:var(--text-muted);font-size:0.85rem;margin-bottom:16px;
+}
+.btn-group{display:flex;gap:12px;flex-wrap:wrap}
+
+/* ====== Buttons ====== */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 28px;border:none;border-radius:var(--radius-sm);
+  font-size:0.95rem;font-weight:600;cursor:pointer;
+  transition:all var(--transition);
+  font-family:var(--font);
+  text-decoration:none;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#fff;box-shadow:0 4px 16px rgba(212,145,74,0.3);
+}
+.btn-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 24px rgba(212,145,74,0.4);
+}
+.btn-primary:disabled{
+  opacity:0.6;cursor:not-allowed;transform:none;
+  box-shadow:none;
+}
+.btn-secondary{
+  background:var(--bg-glass);
+  color:var(--text-secondary);
+  border:1px solid var(--border);
+}
+.btn-secondary:hover{
+  background:rgba(255,255,255,0.85);
+  border-color:var(--primary-light);
+  color:var(--primary-dark);
+}
+.btn-accent{
+  background:linear-gradient(135deg,var(--accent),#357ABD);
+  color:#fff;box-shadow:0 4px 16px rgba(74,144,217,0.3);
+}
+.btn-accent:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 24px rgba(74,144,217,0.4);
+}
+.btn-sm{padding:8px 18px;font-size:0.85rem}
+.btn-lg{padding:16px 36px;font-size:1.05rem}
+.btn-loading{position:relative;pointer-events:none}
+.btn-loading::after{
+  content:'';width:18px;height:18px;
+  border:2px solid rgba(255,255,255,0.3);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin 0.6s linear infinite;
+  margin-left:8px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ====== Results Section ====== */
+.results-section{
+  display:none;
+  margin-bottom:48px;position:relative;z-index:1;
+}
+.results-section.show{display:block}
+.results-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;flex-wrap:wrap;gap:12px;
+}
+.results-header h2{font-size:1.4rem;font-weight:700}
+.result-cards{display:flex;flex-direction:column;gap:16px}
+.result-card{
+  background:var(--bg-card);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-radius:var(--radius-lg);
+  padding:20px 24px;
+  box-shadow:var(--shadow-sm);
+  transition:all var(--transition);
+  border:1px solid transparent;
+  cursor:pointer;
+}
+.result-card:hover{
+  box-shadow:var(--shadow-md);
+  transform:translateY(-1px);
+  border-color:var(--border);
+}
+.result-card.top-match{
+  border:1px solid var(--primary-light);
+  background:rgba(212,145,74,0.05);
+}
+.result-card-inner{
+  display:flex;gap:16px;align-items:center;
+}
+.result-rank{
+  width:40px;height:40px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:1rem;
+  flex-shrink:0;
+}
+.result-rank.r1{background:linear-gradient(135deg,#F5A623,#D4914A);color:#fff}
+.result-rank.r2{background:rgba(74,144,217,0.15);color:var(--accent)}
+.result-rank.r3{background:rgba(107,93,79,0.1);color:var(--text-secondary)}
+.result-info{flex:1;min-width:0}
+.result-name{font-weight:700;font-size:1.1rem;margin-bottom:2px}
+.result-name-en{color:var(--text-muted);font-size:0.85rem;margin-bottom:8px}
+.confidence-bar-wrap{
+  display:flex;align-items:center;gap:10px;
+}
+.confidence-bar{
+  flex:1;height:8px;background:rgba(0,0,0,0.06);
+  border-radius:4px;overflow:hidden;
+}
+.confidence-fill{
+  height:100%;border-radius:4px;
+  background:linear-gradient(90deg,var(--primary),var(--primary-light));
+  transition:width 1s cubic-bezier(0.4,0,0.2,1);
+}
+.confidence-pct{
+  font-weight:700;font-size:0.9rem;min-width:48px;text-align:right;
+  color:var(--primary-dark);
+}
+.result-brief{
+  display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;
+}
+.result-brief span{
+  font-size:0.8rem;color:var(--text-muted);
+  background:rgba(0,0,0,0.03);padding:4px 10px;border-radius:6px;
+}
+
+/* ====== Continue Button ====== */
+.continue-section{
+  text-align:center;
+  padding:32px 0 0;
+}
+
+/* ====== Encyclopedia Section ====== */
+.encyclopedia-section{
+  padding:20px 0 60px;position:relative;z-index:1;
+}
+.section-header{
+  text-align:center;margin-bottom:40px;
+}
+.section-header h2{
+  font-size:2rem;font-weight:800;margin-bottom:8px;
+}
+.section-header p{color:var(--text-secondary);font-size:1rem}
+
+/* Search & Filter Bar */
+.search-bar{
+  display:flex;gap:12px;margin-bottom:24px;
+  background:var(--bg-card);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-radius:var(--radius-lg);
+  padding:12px 16px;
+  box-shadow:var(--shadow-sm);
+  flex-wrap:wrap;
+}
+.search-input-wrap{
+  flex:1;min-width:200px;position:relative;
+}
+.search-input-wrap .search-icon{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  color:var(--text-muted);font-size:1.1rem;
+}
+.search-input{
+  width:100%;padding:10px 14px 10px 40px;
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  font-size:0.9rem;font-family:var(--font);
+  background:rgba(255,255,255,0.6);
+  color:var(--text);outline:none;
+  transition:var(--transition);
+}
+.search-input:focus{
+  border-color:var(--primary-light);
+  box-shadow:0 0 0 3px rgba(212,145,74,0.1);
+}
+.filter-chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.filter-chip{
+  padding:6px 14px;border-radius:20px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,0.5);
+  font-size:0.82rem;cursor:pointer;
+  transition:all var(--transition);
+  white-space:nowrap;
+  font-family:var(--font);
+  color:var(--text-secondary);
+}
+.filter-chip:hover{border-color:var(--primary-light)}
+.filter-chip.active{
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#fff;border-color:transparent;
+}
+
+/* Breed Grid */
+.breed-count{
+  font-size:0.85rem;color:var(--text-muted);
+  margin-bottom:16px;text-align:center;
+}
+.breed-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:16px;
+}
+.breed-card{
+  background:var(--bg-card);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-radius:var(--radius-md);
+  padding:20px;
+  box-shadow:var(--shadow-sm);
+  cursor:pointer;
+  transition:all var(--transition);
+  border:1px solid transparent;
+  position:relative;overflow:hidden;
+}
+.breed-card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(212,145,74,0.04),rgba(74,144,217,0.03));
+  opacity:0;transition:opacity var(--transition);
+}
+.breed-card:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-md);
+  border-color:var(--primary-light);
+}
+.breed-card:hover::after{opacity:1}
+.breed-card-header{
+  display:flex;align-items:center;gap:12px;margin-bottom:12px;
+}
+.breed-card-emoji{
+  width:44px;height:44px;
+  background:linear-gradient(135deg,rgba(212,145,74,0.15),rgba(212,145,74,0.06));
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;flex-shrink:0;
+}
+.breed-card-names{flex:1;min-width:0}
+.breed-card-name{font-weight:700;font-size:1rem;margin-bottom:2px}
+.breed-card-name-en{font-size:0.78rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.breed-card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.breed-tag{
+  font-size:0.72rem;padding:3px 8px;border-radius:6px;
+  background:rgba(0,0,0,0.04);color:var(--text-secondary);
+}
+.breed-tag.size-tag{
+  background:rgba(74,144,217,0.1);color:var(--accent);
+  font-weight:600;
+}
+.breed-card-meta{
+  display:flex;gap:16px;font-size:0.78rem;color:var(--text-muted);
+}
+.breed-card-meta span{white-space:nowrap}
+
+/* ====== Breed Detail Modal ====== */
+.modal-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;
+  padding:24px;
+}
+.modal-overlay.show{display:flex}
+.modal{
+  background:#fff;
+  border-radius:var(--radius-xl);
+  max-width:720px;width:100%;
+  max-height:85vh;overflow-y:auto;
+  box-shadow:var(--shadow-lg);
+  animation:modalIn 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes modalIn{
+  from{opacity:0;transform:scale(0.95) translateY(10px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+.modal-header{
+  position:sticky;top:0;background:#fff;
+  padding:24px 28px 0;z-index:10;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.modal-header h2{font-size:1.4rem;font-weight:700}
+.modal-header .modal-en{font-size:0.9rem;color:var(--text-muted)}
+.modal-close{
+  width:36px;height:36px;border-radius:50%;
+  border:none;background:rgba(0,0,0,0.05);
+  cursor:pointer;font-size:1.2rem;display:flex;
+  align-items:center;justify-content:center;
+  transition:var(--transition);
+}
+.modal-close:hover{background:rgba(0,0,0,0.1)}
+.modal-body{padding:24px 28px 32px}
+.modal-section{margin-bottom:24px}
+.modal-section h4{
+  font-size:0.85rem;text-transform:uppercase;
+  letter-spacing:0.05em;color:var(--primary-dark);
+  margin-bottom:10px;
+}
+.modal-section p,.modal-section ul{color:var(--text-secondary);font-size:0.9rem}
+.modal-section ul{list-style:none;padding:0}
+.modal-section ul li{
+  padding:6px 0;
+  border-bottom:1px solid rgba(0,0,0,0.04);
+}
+.modal-section ul li:last-child{border-bottom:none}
+.modal-meta-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:12px;
+}
+.modal-meta-item{
+  background:rgba(0,0,0,0.02);
+  padding:12px;border-radius:var(--radius-sm);
+}
+.modal-meta-item .label{font-size:0.75rem;color:var(--text-muted);margin-bottom:2px}
+.modal-meta-item .value{font-weight:600;font-size:0.9rem}
+
+/* Badge colors */
+.badge-temperament{background:rgba(212,145,74,0.1);color:var(--primary-dark)}
+.badge-exercise{background:rgba(74,144,217,0.1);color:var(--accent)}
+.badge-care{background:rgba(76,175,80,0.1);color:#388E3C}
+
+/* Empty / Loading States */
+.empty-state{
+  text-align:center;padding:48px 24px;
+  color:var(--text-muted);
+}
+.empty-state .empty-icon{font-size:3rem;margin-bottom:12px}
+.loading-spinner{
+  width:40px;height:40px;
+  border:3px solid rgba(212,145,74,0.15);
+  border-top-color:var(--primary);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+  margin:40px auto;
+}
+/* Toast */
+.toast{
+  position:fixed;top:24px;left:50%;transform:translateX(-50%);
+  background:#2D2418;color:#fff;
+  padding:12px 24px;border-radius:var(--radius-sm);
+  font-size:0.9rem;z-index:300;
+  box-shadow:var(--shadow-lg);
+  animation:toastIn 0.3s ease;
+  pointer-events:none;
+}
+@keyframes toastIn{
+  from{opacity:0;transform:translateX(-50%) translateY(-16px)}
+  to{opacity:1;transform:translateX(-50%) translateY(0)}
+}
+
+/* Scroll to Top */
+.scroll-top{
+  position:fixed;bottom:32px;right:32px;z-index:50;
+  width:44px;height:44px;border-radius:50%;
+  background:var(--primary);color:#fff;
+  border:none;cursor:pointer;
+  font-size:1.2rem;
+  box-shadow:var(--shadow-md);
+  transition:all var(--transition);
+  display:none;align-items:center;justify-content:center;
+}
+.scroll-top.show{display:flex}
+.scroll-top:hover{background:var(--primary-dark);transform:translateY(-2px)}
+
+/* ====== Analytics Dashboard ====== */
+.analytics-section{
+  padding:20px 0 80px;position:relative;z-index:1;
+}
+.analytics-summary{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:16px;margin-bottom:32px;
+}
+.analytics-card{
+  background:var(--bg-card);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-radius:var(--radius-lg);
+  padding:24px 20px;
+  text-align:center;
+  box-shadow:var(--shadow-sm);
+  border:1px solid var(--border);
+  transition:all var(--transition);
+}
+.analytics-card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-md);
+  border-color:var(--primary-light);
+}
+.ac-icon{font-size:1.8rem;margin-bottom:8px}
+.ac-value{
+  font-size:2rem;font-weight:800;
+  background:linear-gradient(135deg,var(--primary-dark),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.ac-label{font-size:0.82rem;color:var(--text-muted);margin-top:4px}
+
+/* Chart Cards */
+.chart-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;margin-bottom:16px;
+}
+.chart-card{
+  background:var(--bg-card);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-radius:var(--radius-lg);
+  padding:20px 24px;
+  box-shadow:var(--shadow-sm);
+  border:1px solid var(--border);
+}
+.chart-card-full{
+  margin-bottom:16px;
+}
+.chart-card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;flex-wrap:wrap;gap:8px;
+}
+.chart-card-header h3{
+  font-size:1.05rem;font-weight:700;color:var(--text);
+}
+.chart-badge{
+  font-size:0.72rem;color:var(--text-muted);
+  background:rgba(0,0,0,0.04);padding:4px 10px;border-radius:8px;
+}
+.chart-wrap{
+  width:100%;position:relative;
+}
+
+/* ====== Responsive ====== */
+@media (max-width:768px){
+  .hero h1{font-size:2rem}
+  .hero p{font-size:1rem}
+  .hero-stats{gap:10px}
+  .hero-stat{padding:12px 16px;min-width:90px}
+  .hero-stat-num{font-size:1.3rem}
+  .preview-inner{flex-direction:column;align-items:center}
+  .preview-img-wrap{width:160px;height:160px}
+  .breed-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+  .result-card-inner{flex-direction:column;align-items:flex-start}
+}
+@media (max-width:480px){
+  .nav-links a{font-size:0.8rem;padding:6px 10px}
+  .hero h1{font-size:1.6rem}
+  .breed-grid{grid-template-columns:1fr}
+  .modal-meta-grid{grid-template-columns:1fr}
+  .btn-group{flex-direction:column}
+  .btn{width:100%;justify-content:center}
+  .chart-row{grid-template-columns:1fr}
+  .analytics-summary{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+  .ac-value{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-decor"></div>
+
+<!-- Navigation -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo" onclick="scrollToTop()">
+      <span class="logo-icon">🐕</span>
+      犬博士
+    </a>
+    <ul class="nav-links">
+      <li><a href="#identify" class="active" onclick="navTo('identify')">智能识别</a></li>
+      <li><a href="#encyclopedia" onclick="navTo('encyclopedia')">品种百科</a></li>
+      <li><a href="#analytics" onclick="navTo('analytics')">数据分析</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero + Identify Section -->
+<section id="identify" class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      <span>✨</span> AI 驱动 · 120 种犬种识别
+    </div>
+    <h1>您的狗狗是什么品种？</h1>
+    <p>上传狗狗照片，AI 即刻识别品种，提供详细百科知识。覆盖 Stanford Dogs 数据集全部 120 个品种。</p>
+    <!-- Quick Stats -->
+    <div class="hero-stats" id="heroStats">
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="statBreeds">120</div>
+        <div class="hero-stat-label">犬种识别</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="statCats">7</div>
+        <div class="hero-stat-label">犬种类别</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="statAccuracy">92%</div>
+        <div class="hero-stat-label">Top-5 准确率</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="statModel">ResNet50</div>
+        <div class="hero-stat-label">AI 模型</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Upload Zone -->
+<section class="upload-section">
+  <div class="container">
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">📸</div>
+      <h3>拖拽或点击上传狗狗照片</h3>
+      <p class="hint">支持 JPG / PNG / WebP 格式，<span>点击选择文件</span></p>
+      <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
+    </div>
+
+    <!-- Image Preview -->
+    <div class="preview-area" id="previewArea">
+      <div class="preview-inner">
+        <div class="preview-img-wrap">
+          <img id="previewImg" src="" alt="预览">
+        </div>
+        <div class="preview-info">
+          <div class="file-name" id="fileName"></div>
+          <div class="file-size" id="fileSize"></div>
+          <div class="btn-group">
+            <button class="btn btn-primary btn-lg" id="identifyBtn" onclick="startIdentify()">
+              🔍 开始识别
+            </button>
+            <button class="btn btn-secondary" onclick="resetUpload()">
+              ✕ 重新选择
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Results Section -->
+<section class="results-section" id="resultsSection">
+  <div class="container">
+    <div class="results-header">
+      <h2>🔬 识别结果</h2>
+    </div>
+    <div class="result-cards" id="resultCards"></div>
+    <div class="continue-section">
+      <button class="btn btn-accent btn-lg" onclick="continueIdentify()">
+        🔄 继续识别
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Encyclopedia Section -->
+<section class="encyclopedia-section" id="encyclopedia">
+  <div class="container">
+    <div class="section-header">
+      <h2>📚 品种百科全书</h2>
+      <p>探索 120 个犬种的详细资料，了解每种狗狗的特点与养护知识</p>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="searchInput"
+          placeholder="搜索品种名称、英文名、原产地..."
+          oninput="filterBreeds()">
+      </div>
+      <div class="filter-chips" id="filterChips">
+        <button class="filter-chip active" onclick="setSizeFilter('all',this)">全部</button>
+        <button class="filter-chip" onclick="setSizeFilter('小型犬',this)">小型犬</button>
+        <button class="filter-chip" onclick="setSizeFilter('中型犬',this)">中型犬</button>
+        <button class="filter-chip" onclick="setSizeFilter('大型犬',this)">大型犬</button>
+        <button class="filter-chip" onclick="setSizeFilter('超大型犬',this)">超大型</button>
+      </div>
+    </div>
+
+    <div class="breed-count" id="breedCount"></div>
+
+    <!-- Grid -->
+    <div class="breed-grid" id="breedGrid">
+      <div class="loading-spinner"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Analytics Dashboard Section -->
+<section class="analytics-section" id="analytics">
+  <div class="container">
+    <div class="section-header">
+      <h2>📊 数据可视化分析</h2>
+      <p>基于 Stanford Dogs Dataset 与 ResNet50 模型的训练与评估数据</p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="analytics-summary" id="analyticsSummary">
+      <div class="analytics-card">
+        <div class="ac-icon">🎯</div>
+        <div class="ac-value" id="acTrainAcc">--</div>
+        <div class="ac-label">最终训练准确率</div>
+      </div>
+      <div class="analytics-card">
+        <div class="ac-icon">✅</div>
+        <div class="ac-value" id="acValAcc">--</div>
+        <div class="ac-label">验证集 Top-1 准确率</div>
+      </div>
+      <div class="analytics-card">
+        <div class="ac-icon">🏆</div>
+        <div class="ac-value" id="acTop5">--</div>
+        <div class="ac-label">验证集 Top-5 准确率</div>
+      </div>
+      <div class="analytics-card">
+        <div class="ac-icon">🐕</div>
+        <div class="ac-value" id="acBreeds">--</div>
+        <div class="ac-label">可识别犬种数</div>
+      </div>
+    </div>
+
+    <!-- Row 1: Training Curves (full width) -->
+    <div class="chart-card chart-card-full">
+      <div class="chart-card-header">
+        <h3>📈 训练过程 — 准确率与损失曲线</h3>
+        <span class="chart-badge">ResNet50 · Stanford Dogs · 120 Classes</span>
+      </div>
+      <div class="chart-wrap" id="chartTraining" style="height:400px"></div>
+    </div>
+
+    <!-- Row 2: Size Dist + Origin Dist -->
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <h3>📏 品种体型分布</h3>
+        </div>
+        <div class="chart-wrap" id="chartSize" style="height:320px"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <h3>🌍 品种原产地分布 (Top 15)</h3>
+        </div>
+        <div class="chart-wrap" id="chartOrigin" style="height:320px"></div>
+      </div>
+    </div>
+
+    <!-- Row 3: Top Accuracy + Lifespan -->
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <h3>🎯 识别准确率 Top-12 品种</h3>
+        </div>
+        <div class="chart-wrap" id="chartTopAcc" style="height:340px"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <h3>⏳ 品种寿命分布</h3>
+        </div>
+        <div class="chart-wrap" id="chartLifespan" style="height:340px"></div>
+      </div>
+    </div>
+
+    <!-- Row 4: Exercise Need + Shedding -->
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <h3>🏃 运动需求分布</h3>
+        </div>
+        <div class="chart-wrap" id="chartExercise" style="height:300px"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <h3>🧹 掉毛程度分布</h3>
+        </div>
+        <div class="chart-wrap" id="chartShedding" style="height:300px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="breedModal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <h2 id="modalNameZh"></h2>
+        <div class="modal-en" id="modalNameEn"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- Scroll to Top -->
+<button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()">↑</button>
+
+<!-- Toast -->
+<div class="toast" id="toast" style="display:none"></div>
+
+<script>
+// ====== Global State ======
+const API_BASE = '';
+let allBreeds = [];
+let selectedFile = null;
+let currentFilter = 'all';
+let currentSearch = '';
+let breedIndex = {}; // breed_id -> breed data
+let nameZhIndex = {}; // name_zh -> breed data (for cross-ref from ML results)
+
+// ====== Dog Emojis by group ======
+const breedEmojis = {
+  '梗犬':'🐕','猎犬':'🐕‍🦺','运动犬':'🦮','工作犬':'🐕‍🦺','牧羊犬':'🐑',
+  '牧牛犬':'🐄','玩赏犬':'🐩','伴侣犬':'🐶','雪橇犬':'🛷','寻回犬':'🎾',
+  '指示犬':'🎯','水犬':'🌊','护卫犬':'🛡️','警犬':'👮','导盲犬':'🦯',
+  '狐狸犬':'🦊','獒犬':'🦁','猎狼犬':'🐺','灵缇':'🏃','波音达':'📍'
+};
+const sizeEmojis = {'小型犬':'🐾','中型犬':'🐕','大型犬':'🦮','超大型犬':'🐻'};
+const groupColors = {
+  '梗犬':'#E8B87A','猎犬':'#D4914A','运动犬':'#4A90D9','工作犬':'#7B6B5A',
+  '牧羊犬':'#8BC34A','玩赏犬':'#E91E63','伴侣犬':'#FF9800','雪橇犬':'#607D8B',
+  '寻回犬':'#2196F3','护卫犬':'#795548','獒犬':'#F44336'
+};
+
+function getBreedEmoji(breed){
+  for(const [k,v] of Object.entries(breedEmojis)){
+    if(breed.tags && breed.tags.some(t=>t.includes(k))) return v;
+  }
+  const sz = sizeEmojis[breed.size] || '🐶';
+  return sz;
+}
+function getGroupColor(tags){
+  if(!tags) return '#D4914A';
+  for(const [k,v] of Object.entries(groupColors)){
+    if(tags.some(t=>t.includes(k))) return v;
+  }
+  return '#D4914A';
+}
+
+// ====== Initialization ======
+document.addEventListener('DOMContentLoaded',()=>{
+  setupDragDrop();
+  setupScrollTop();
+  loadBreeds();
+});
+
+// Load all breeds from API
+async function loadBreeds(){
+  try{
+    const resp = await fetch(`${API_BASE}/api/breeds?size=200`);
+    const data = await resp.json();
+    if(data.code===0 && data.data){
+      allBreeds = data.data.breeds || data.data.items || data.data;
+    }
+  }catch(e){
+    console.warn('API load failed, trying fallback:',e);
+    try{
+      const resp = await fetch(`${API_BASE}/api/breeds?size=200`);
+      const data = await resp.json();
+      if(Array.isArray(data)) allBreeds = data;
+      else if(data.data && Array.isArray(data.data)) allBreeds = data.data;
+      else if(data.breeds) allBreeds = data.breeds;
+    }catch(e2){
+      showToast('百科数据加载失败，请刷新页面');
+    }
+  }
+  breedIndex = {};
+  nameZhIndex = {};
+  allBreeds.forEach(b=>{ breedIndex[b.breed_id]=b; nameZhIndex[b.name_zh]=b; });
+  updateHeroStats();
+  renderBreeds();
+}
+
+function updateHeroStats(){
+  if(!allBreeds.length) return;
+  document.getElementById('statBreeds').textContent = allBreeds.length;
+  // Count unique size categories
+  const sizes = new Set(allBreeds.map(b=>b.size).filter(Boolean));
+  document.getElementById('statCats').textContent = sizes.size || 7;
+}
+
+// ====== Drag & Drop ======
+function setupDragDrop(){
+  const zone = document.getElementById('uploadZone');
+  ['dragenter','dragover'].forEach(e=>{
+    zone.addEventListener(e,ev=>{ev.preventDefault();zone.classList.add('drag-over')});
+  });
+  ['dragleave','drop'].forEach(e=>{
+    zone.addEventListener(e,ev=>{ev.preventDefault();zone.classList.remove('drag-over')});
+  });
+  zone.addEventListener('drop',ev=>{
+    const files = ev.dataTransfer.files;
+    if(files.length>0) processFile(files[0]);
+  });
+  document.addEventListener('paste',ev=>{
+    const items = ev.clipboardData?.items;
+    if(items){
+      for(const item of items){
+        if(item.type.startsWith('image/')){
+          processFile(item.getAsFile());
+          break;
+        }
+      }
+    }
+  });
+}
+
+function handleFileSelect(ev){
+  const file = ev.target.files[0];
+  if(file) processFile(file);
+}
+
+function processFile(file){
+  if(!file.type.startsWith('image/')){
+    showToast('请选择图片文件');
+    return;
+  }
+  if(file.size > 10*1024*1024){
+    showToast('图片大小不能超过 10MB');
+    return;
+  }
+  selectedFile = file;
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    document.getElementById('previewImg').src = e.target.result;
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent = formatSize(file.size);
+    document.getElementById('previewArea').classList.add('show');
+    document.getElementById('uploadZone').style.display = 'none';
+    document.getElementById('resultsSection').classList.remove('show');
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetUpload(){
+  selectedFile = null;
+  document.getElementById('previewArea').classList.remove('show');
+  document.getElementById('uploadZone').style.display = '';
+  document.getElementById('fileInput').value = '';
+}
+
+function formatSize(bytes){
+  if(bytes<1024) return bytes+' B';
+  if(bytes<1048576) return (bytes/1024).toFixed(1)+' KB';
+  return (bytes/1048576).toFixed(1)+' MB';
+}
+
+// ====== Identify ======
+async function startIdentify(){
+  if(!selectedFile){showToast('请先选择图片');return;}
+  const btn = document.getElementById('identifyBtn');
+  btn.disabled = true;
+  btn.classList.add('btn-loading');
+  btn.innerHTML = '识别中';
+
+  try{
+    const base64 = await fileToBase64(selectedFile);
+    const resp = await fetch(`${API_BASE}/api/identify`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({image:base64,top_k:3})
+    });
+    const result = await resp.json();
+    if(result.code===0){
+      renderResults(result.data);
+    }else{
+      showToast(result.message||'识别失败');
+    }
+  }catch(e){
+    showToast('网络错误，请重试');
+  }finally{
+    btn.disabled = false;
+    btn.classList.remove('btn-loading');
+    btn.innerHTML = '🔍 开始识别';
+  }
+}
+
+function fileToBase64(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=>resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderResults(data){
+  const section = document.getElementById('resultsSection');
+  const cards = document.getElementById('resultCards');
+  section.classList.add('show');
+
+  let results = data.results || data.predictions || [];
+  if(!results.length && data.breed_id){
+    results = [{breed_id:data.breed_id,breed_name_zh:data.breed_name_zh,
+      breed_name_en:data.breed_name_en,confidence:data.confidence||0.9}];
+  }
+
+  cards.innerHTML = results.map((r,i)=>{
+    const conf = (r.confidence*100).toFixed(1);
+    const breed = breedIndex[r.breed_id] || {};
+    const rank = i===0?'r1':i===1?'r2':'r3';
+    const isTop = i===0;
+    return `
+    <div class="result-card ${isTop?'top-match':''}" onclick="openBreedDetail('${r.breed_id}','${r.breed_name_zh||r.name_zh||''}')">
+      <div class="result-card-inner">
+        <div class="result-rank ${rank}">${i+1}</div>
+        <div class="result-info">
+          <div class="result-name">${r.breed_name_zh||r.name_zh||''}</div>
+          <div class="result-name-en">${r.breed_name_en||r.name_en||''}</div>
+          <div class="confidence-bar-wrap">
+            <div class="confidence-bar">
+              <div class="confidence-fill" style="width:0%" data-width="${conf}%"></div>
+            </div>
+            <div class="confidence-pct">${conf}%</div>
+          </div>
+          ${breed.size?`
+          <div class="result-brief">
+            <span>📏 ${breed.size}</span>
+            <span>⚖️ ${breed.weight_range||''}</span>
+            <span>⏳ ${breed.lifespan||''}</span>
+            <span>🌍 ${breed.origin||''}</span>
+          </div>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Animate confidence bars
+  setTimeout(()=>{
+    cards.querySelectorAll('.confidence-fill').forEach(el=>{
+      el.style.width = el.dataset.width;
+    });
+  },100);
+
+  document.getElementById('identify').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function continueIdentify(){
+  resetUpload();
+  document.getElementById('resultsSection').classList.remove('show');
+  document.getElementById('uploadZone').style.display = '';
+  document.getElementById('identify').scrollIntoView({behavior:'smooth'});
+}
+
+// ====== Encyclopedia ======
+function renderBreeds(){
+  let filtered = [...allBreeds];
+  if(currentFilter!=='all'){
+    filtered = filtered.filter(b=>b.size===currentFilter);
+  }
+  if(currentSearch){
+    const q = currentSearch.toLowerCase();
+    filtered = filtered.filter(b=>
+      (b.name_zh||'').toLowerCase().includes(q)||
+      (b.name_en||'').toLowerCase().includes(q)||
+      (b.origin||'').toLowerCase().includes(q)||
+      (b.tags||[]).some(t=>t.toLowerCase().includes(q))||
+      (b.personality||[]).some(p=>p.toLowerCase().includes(q))
+    );
+  }
+  document.getElementById('breedCount').textContent =
+    `共 ${filtered.length} 个品种`;
+
+  const grid = document.getElementById('breedGrid');
+  if(!filtered.length){
+    grid.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <p>没有找到匹配的品种</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(b=>{
+    const emoji = getBreedEmoji(b);
+    const tags = b.tags||[];
+    const displayTags = tags.slice(0,3);
+    return `
+    <div class="breed-card" onclick="openBreedDetail('${b.breed_id}')">
+      <div class="breed-card-header">
+        <div class="breed-card-emoji">${emoji}</div>
+        <div class="breed-card-names">
+          <div class="breed-card-name">${b.name_zh}</div>
+          <div class="breed-card-name-en">${b.name_en}</div>
+        </div>
+      </div>
+      <div class="breed-card-tags">
+        ${b.size?`<span class="breed-tag size-tag">${b.size}</span>`:''}
+        ${displayTags.map(t=>`<span class="breed-tag">${t}</span>`).join('')}
+      </div>
+      <div class="breed-card-meta">
+        <span>📍 ${b.origin||'--'}</span>
+        <span>⏳ ${b.lifespan||'--'}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setSizeFilter(size,el){
+  currentFilter = size;
+  document.querySelectorAll('#filterChips .filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderBreeds();
+}
+
+function filterBreeds(){
+  currentSearch = document.getElementById('searchInput').value;
+  renderBreeds();
+}
+
+// ====== Breed Detail Modal ======
+function openBreedDetail(breedId, fallbackNameZh){
+  // ML results use a different breed_id system — prefer name_zh lookup
+  let breed = fallbackNameZh ? nameZhIndex[fallbackNameZh] : null;
+  if(!breed) breed = breedIndex[breedId];
+  if(!breed){showToast('品种信息未找到');return;}
+
+  document.getElementById('modalNameZh').textContent = breed.name_zh;
+  document.getElementById('modalNameEn').textContent = breed.name_en;
+
+  const body = document.getElementById('modalBody');
+  body.innerHTML = `
+    <div class="modal-section">
+      <h4>📋 基本信息</h4>
+      <div class="modal-meta-grid">
+        <div class="modal-meta-item">
+          <div class="label">原产地</div>
+          <div class="value">${breed.origin||'--'}</div>
+        </div>
+        <div class="modal-meta-item">
+          <div class="label">体型</div>
+          <div class="value">${breed.size||'--'}</div>
+        </div>
+        <div class="modal-meta-item">
+          <div class="label">体重</div>
+          <div class="value">${breed.weight_range||'--'}</div>
+        </div>
+        <div class="modal-meta-item">
+          <div class="label">身高</div>
+          <div class="value">${breed.height_range||'--'}</div>
+        </div>
+        <div class="modal-meta-item">
+          <div class="label">寿命</div>
+          <div class="value">${breed.lifespan||'--'}</div>
+        </div>
+        <div class="modal-meta-item">
+          <div class="label">运动需求</div>
+          <div class="value">${breed.exercise_need||'--'}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <h4>💭 性格特点</h4>
+      <ul>
+        ${(breed.personality||[]).map(p=>`<li>✨ ${p}</li>`).join('')}
+      </ul>
+    </div>
+
+    <div class="modal-section">
+      <h4>🎨 被毛特征</h4>
+      <div class="modal-meta-grid">
+        <div class="modal-meta-item">
+          <div class="label">毛色</div>
+          <div class="value">${(breed.coat_color||[]).join('、')||'--'}</div>
+        </div>
+        <div class="modal-meta-item">
+          <div class="label">毛长</div>
+          <div class="value">${breed.coat_length||'--'}</div>
+        </div>
+        <div class="modal-meta-item">
+          <div class="label">掉毛程度</div>
+          <div class="value">${breed.shedding||'--'}</div>
+        </div>
+        <div class="modal-meta-item">
+          <div class="label">美容需求</div>
+          <div class="value">${(breed.grooming||'--').substring(0,20)}...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <h4>🍖 喂养建议</h4>
+      <p>${breed.feeding_tips||'--'}</p>
+      ${breed.recommended_food?`<p style="margin-top:8px"><strong>推荐犬粮：</strong>${breed.recommended_food}</p>`:''}
+      ${(breed.forbidden_foods||[]).length?`
+        <p style="margin-top:8px"><strong>禁食：</strong>${breed.forbidden_foods.join('、')}</p>
+      `:''}
+    </div>
+
+    <div class="modal-section">
+      <h4>🏥 健康护理</h4>
+      <ul>
+        ${(breed.common_diseases||[]).map(d=>`<li>⚠️ ${d}</li>`).join('')}
+      </ul>
+      ${breed.vaccine_schedule?`<p style="margin-top:8px"><strong>疫苗计划：</strong>${breed.vaccine_schedule}</p>`:''}
+    </div>
+
+    <div class="modal-section">
+      <h4>📝 简介</h4>
+      <p>${breed.description||'暂无简介'}</p>
+    </div>
+
+    <div class="modal-section" style="margin-bottom:0">
+      <h4>🏷️ 标签</h4>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        ${(breed.tags||[]).map(t=>`<span class="breed-tag">${t}</span>`).join('')}
+      </div>
+    </div>
+  `;
+
+  document.getElementById('modalOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(ev){
+  if(ev && ev.target!==document.getElementById('modalOverlay')) return;
+  document.getElementById('modalOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown',(e)=>{
+  if(e.key==='Escape') closeModal();
+});
+
+// ====== Navigation ======
+function navTo(section){
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  document.querySelector(`.nav-links a[href="#${section}"]`)?.classList.add('active');
+  document.getElementById(section).scrollIntoView({behavior:'smooth'});
+  if(section==='analytics') loadAnalytics();
+}
+
+function scrollToTop(){
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function setupScrollTop(){
+  const btn = document.getElementById('scrollTopBtn');
+  window.addEventListener('scroll',()=>{
+    btn.classList.toggle('show',window.scrollY>400);
+  });
+  btn.addEventListener('click',scrollToTop);
+}
+
+// ====== Toast ======
+let toastTimer;
+function showToast(msg){
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{toast.style.display='none'},2500);
+}
+
+// ====== Analytics & Visualization ======
+let analyticsLoaded = false;
+let chartInstances = {};
+
+async function loadAnalytics(){
+  if(analyticsLoaded) return;
+  analyticsLoaded = true;
+
+  try{
+    const resp = await fetch(`${API_BASE}/api/stats/visualization`);
+    const json = await resp.json();
+    if(json.code!==0) throw new Error(json.message);
+    const d = json.data;
+
+    // Update summary cards
+    document.getElementById('acTrainAcc').textContent = (d.training_curves.final_train_acc*100).toFixed(1)+'%';
+    document.getElementById('acValAcc').textContent = (d.training_curves.final_val_acc*100).toFixed(1)+'%';
+    document.getElementById('acTop5').textContent = (d.training_curves.final_top5*100).toFixed(1)+'%';
+    document.getElementById('acBreeds').textContent = d.breed_count;
+
+    // Render all charts
+    renderTrainingChart(d.training_curves);
+    renderSizeChart(d.size_distribution);
+    renderOriginChart(d.origin_distribution);
+    renderTopAccChart(d.top_accurate_breeds);
+    renderLifespanChart(d.lifespan_distribution);
+    renderExerciseChart(d.exercise_distribution);
+    renderSheddingChart(d.shedding_distribution);
+
+    // Handle resize
+    window.addEventListener('resize', ()=>{
+      Object.values(chartInstances).forEach(c=>c.resize());
+    });
+  }catch(e){
+    console.error('Analytics load error:', e);
+    analyticsLoaded = false;
+  }
+}
+
+function getChart(domId){
+  if(chartInstances[domId]) chartInstances[domId].dispose();
+  const dom = document.getElementById(domId);
+  if(!dom) return null;
+  const chart = echarts.init(dom);
+  chartInstances[domId] = chart;
+  return chart;
+}
+
+function renderTrainingChart(tc){
+  const chart = getChart('chartTraining');
+  if(!chart) return;
+  chart.setOption({
+    tooltip:{trigger:'axis'},
+    legend:{data:['训练准确率','验证准确率','Top-5准确率','训练损失','验证损失'],top:0,textStyle:{fontSize:12}},
+    grid:{left:50,right:50,top:60,bottom:30},
+    xAxis:{type:'category',data:tc.epochs,name:'Epoch',nameLocation:'middle',nameGap:30},
+    yAxis:[
+      {type:'value',name:'Accuracy',min:0,max:1,axisLabel:{formatter:v=>(v*100).toFixed(0)+'%'},splitLine:{lineStyle:{type:'dashed'}}},
+      {type:'value',name:'Loss',splitLine:{show:false}}
+    ],
+    series:[
+      {name:'训练准确率',type:'line',data:tc.train_acc,smooth:true,lineStyle:{width:2,color:'#D4914A'},itemStyle:{color:'#D4914A'},symbol:'none'},
+      {name:'验证准确率',type:'line',data:tc.val_acc,smooth:true,lineStyle:{width:2,color:'#4A90D9'},itemStyle:{color:'#4A90D9'},symbol:'none'},
+      {name:'Top-5准确率',type:'line',data:tc.val_top5,smooth:true,lineStyle:{width:2,color:'#66BB6A',type:'dashed'},itemStyle:{color:'#66BB6A'},symbol:'none'},
+      {name:'训练损失',type:'line',yAxisIndex:1,data:tc.train_loss,smooth:true,lineStyle:{width:1.5,color:'#EF5350',opacity:0.6},itemStyle:{color:'#EF5350'},symbol:'none'},
+      {name:'验证损失',type:'line',yAxisIndex:1,data:tc.val_loss,smooth:true,lineStyle:{width:1.5,color:'#AB47BC',opacity:0.6},itemStyle:{color:'#AB47BC'},symbol:'none'}
+    ]
+  });
+}
+
+function renderSizeChart(data){
+  const chart = getChart('chartSize');
+  if(!chart) return;
+  const colors = {'小型犬':'#E8B87A','中型犬':'#D4914A','大型犬':'#A0652A','超大型犬':'#4A3518'};
+  chart.setOption({
+    tooltip:{trigger:'item',formatter:'{b}: {c} 种 ({d}%)'},
+    series:[{
+      type:'pie',radius:['45%','75%'],center:['50%','55%'],
+      data:data.map(d=>({value:d.value,name:d.name,itemStyle:{color:colors[d.name]||'#D4914A'}})),
+      label:{formatter:'{b}\n{c}种',fontSize:12},
+      emphasis:{label:{fontSize:16,fontWeight:'bold'}}
+    }]
+  });
+}
+
+function renderOriginChart(data){
+  const chart = getChart('chartOrigin');
+  if(!chart) return;
+  chart.setOption({
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
+    grid:{left:90,right:20,top:10,bottom:20},
+    xAxis:{type:'value',name:'品种数'},
+    yAxis:{type:'category',data:data.map(d=>d.name).reverse(),axisLabel:{fontSize:11},inverse:true},
+    series:[{
+      type:'bar',data:data.map(d=>d.value).reverse(),
+      itemStyle:{color:new echarts.graphic.LinearGradient(0,0,1,0,[
+        {offset:0,color:'#D4914A'},{offset:1,color:'#E8B87A'}
+      ])},
+      barMaxWidth:24,
+      label:{show:true,position:'right',fontSize:11}
+    }]
+  });
+}
+
+function renderTopAccChart(data){
+  const chart = getChart('chartTopAcc');
+  if(!chart) return;
+  chart.setOption({
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},formatter:p=>`${p[0].name}<br/>准确率: ${(p[0].value*100).toFixed(1)}%`},
+    grid:{left:90,right:50,top:10,bottom:20},
+    xAxis:{type:'value',name:'Top-1 准确率',max:1,axisLabel:{formatter:v=>(v*100).toFixed(0)+'%'}},
+    yAxis:{type:'category',data:data.map(d=>d.name_zh).reverse(),axisLabel:{fontSize:11},inverse:true},
+    series:[{
+      type:'bar',data:data.map(d=>d.accuracy).reverse(),
+      itemStyle:{color:new echarts.graphic.LinearGradient(0,0,1,0,[
+        {offset:0,color:'#4A90D9'},{offset:1,color:'#7AB5E8'}
+      ])},
+      barMaxWidth:20,
+      label:{show:true,position:'right',fontSize:11,formatter:v=>{
+        const val=(v&&v.value!=null)?v.value:v;
+        if(val==null||isNaN(val))return'--';
+        return(Math.round(parseFloat(val)*100))+'%';
+      }}
+    }]
+  });
+}
+
+function renderLifespanChart(data){
+  const chart = getChart('chartLifespan');
+  if(!chart) return;
+  const colors = ['#E8B87A','#D4914A','#A0652A','#4A3518'];
+  chart.setOption({
+    tooltip:{trigger:'item',formatter:'{b}: {c} 种 ({d}%)'},
+    series:[{
+      type:'pie',radius:['40%','70%'],center:['50%','55%'],
+      data:data.map((d,i)=>({value:d.value,name:d.name,itemStyle:{color:colors[i]}})),
+      label:{formatter:'{b}\n{c}种',fontSize:12},
+      emphasis:{label:{fontSize:16,fontWeight:'bold'}}
+    }]
+  });
+}
+
+function renderExerciseChart(data){
+  const chart = getChart('chartExercise');
+  if(!chart) return;
+  // Sort exercise levels
+  const order = ['低','中低','中等','中高','高'];
+  const sorted = [...data].sort((a,b)=>order.indexOf(a.name)-order.indexOf(b.name));
+  chart.setOption({
+    tooltip:{trigger:'axis'},
+    grid:{left:50,right:30,top:10,bottom:30},
+    xAxis:{type:'category',data:sorted.map(d=>d.name)},
+    yAxis:{type:'value',name:'品种数'},
+    series:[{
+      type:'bar',data:sorted.map(d=>d.value),
+      itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[
+        {offset:0,color:'#D4914A'},{offset:1,color:'rgba(212,145,74,0.3)'}
+      ]),borderRadius:[6,6,0,0]},
+      barMaxWidth:48,
+      label:{show:true,position:'top',fontSize:12,fontWeight:'bold',color:'#A0652A'}
+    }]
+  });
+}
+
+function renderSheddingChart(data){
+  const chart = getChart('chartShedding');
+  if(!chart) return;
+  const order = ['几乎不掉','轻度','中等','较多','严重'];
+  const sorted = [...data].sort((a,b)=>order.indexOf(a.name)-order.indexOf(b.name));
+  chart.setOption({
+    tooltip:{trigger:'axis'},
+    grid:{left:50,right:30,top:10,bottom:30},
+    xAxis:{type:'category',data:sorted.map(d=>d.name)},
+    yAxis:{type:'value',name:'品种数'},
+    series:[{
+      type:'bar',data:sorted.map(d=>d.value),
+      itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[
+        {offset:0,color:'#4A90D9'},{offset:1,color:'rgba(74,144,217,0.3)'}
+      ]),borderRadius:[6,6,0,0]},
+      barMaxWidth:48,
+      label:{show:true,position:'top',fontSize:12,fontWeight:'bold',color:'#357ABD'}
+    }]
+  });
+}
+</script>
+
+</body>
+</html>
